@@ -9,8 +9,9 @@ $sb = New-Object System.Text.StringBuilder
 [void]$sb.AppendLine('  <Fragment>')
 [void]$sb.AppendLine('    <ComponentGroup Id="AppFiles">')
 foreach ($file in $files) {
+    $relative = $file.FullName.Substring($root.Length).TrimStart([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
     [void]$sb.AppendLine('      <Component Directory="INSTALLFOLDER" Guid="*">')
-    [void]$sb.AppendLine('        <File Source="' + $file.FullName + '" />')
+    [void]$sb.AppendLine('        <File Source="' + $relative + '" />')
     [void]$sb.AppendLine('      </Component>')
 }
 [void]$sb.AppendLine('    </ComponentGroup>')

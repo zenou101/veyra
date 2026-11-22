@@ -14,7 +14,8 @@ wix build -arch x64 -o dist/Veyra-Setup-1.0.0-x64.msi `
 ```
 
 `scripts/harvest-wix.ps1` rewrites `Components.wxs` from the published files in
-`artifacts/app`. Do not hand-edit it.
+`artifacts/app` using repository-relative paths. The generated file is ignored by Git;
+do not hand-edit or commit it.
 
 ## Notes
 
