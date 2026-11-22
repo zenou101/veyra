@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Veyra.Colour/Veyra.Colour.csproj" />
+    <Project Path="src/Veyra.ColourProbe/Veyra.ColourProbe.csproj" />
+    <Project Path="src/Veyra.Core/Veyra.Core.csproj" />
+    <Project Path="src/Veyra.Display/Veyra.Display.csproj" />
+    <Project Path="src/Veyra.DisplayGuard/Veyra.DisplayGuard.csproj" />
+    <Project Path="src/Veyra.Games/Veyra.Games.csproj" />
+    <Project Path="src/Veyra.GammaProbe/Veyra.GammaProbe.csproj" />
+    <Project Path="src/Veyra.Overlay/Veyra.Overlay.csproj" />
+    <Project Path="src/Veyra.Storage/Veyra.Storage.csproj" />
+    <Project Path="src/Veyra.Telemetry/Veyra.Telemetry.csproj" />
+    <Project Path="src/Veyra.UI/Veyra.UI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Veyra.Core.Tests/Veyra.Core.Tests.csproj" />
+    <Project Path="tests/Veyra.Display.Tests/Veyra.Display.Tests.csproj" />
+    <Project Path="tests/Veyra.Games.Tests/Veyra.Games.Tests.csproj" />
+    <Project Path="tests/Veyra.Storage.Tests/Veyra.Storage.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Veyra.GuardHarness/Veyra.GuardHarness.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+</Solution>

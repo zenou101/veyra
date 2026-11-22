@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Veyra.Games</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Veyra.Core\Veyra.Core.csproj" />
+    <ProjectReference Include="..\Veyra.Colour\Veyra.Colour.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Veyra.DisplayGuard</RootNamespace>
+    <AssemblyName>Veyra.DisplayGuard</AssemblyName>
+    <UseWindowsForms>false</UseWindowsForms>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Veyra.Display\Veyra.Display.csproj" />
+  </ItemGroup>
+</Project>

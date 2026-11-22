@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Veyra.UI</RootNamespace>
+    <AssemblyName>Veyra</AssemblyName>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\Veyra.ico</ApplicationIcon>
+    <StartupObject>Veyra.UI.App</StartupObject>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <ApplicationDefinition Include="App.xaml" SubType="Designer" Generator="MSBuild:Compile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Veyra.ico" />
+    <Resource Include="Assets\Veyra-256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Veyra.Core\Veyra.Core.csproj" />
+    <ProjectReference Include="..\Veyra.Storage\Veyra.Storage.csproj" />
+    <ProjectReference Include="..\Veyra.Display\Veyra.Display.csproj" />
+    <ProjectReference Include="..\Veyra.Colour\Veyra.Colour.csproj" />
+    <ProjectReference Include="..\Veyra.Games\Veyra.Games.csproj" />
+    <ProjectReference Include="..\Veyra.Telemetry\Veyra.Telemetry.csproj" />
+    <ProjectReference Include="..\Veyra.Overlay\Veyra.Overlay.csproj" />
+    <ProjectReference Include="..\Veyra.DisplayGuard\Veyra.DisplayGuard.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+</Project>

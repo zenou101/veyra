@@ -1,0 +1,225 @@
+<Window x:Class="Veyra.UI.Shell.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="Veyra" Width="1160" Height="760" MinWidth="960" MinHeight="640"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource BgBrush}"
+        UseLayoutRounding="True" SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal">
+    <Window.Resources>
+        <Style x:Key="SidebarNavList" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ItemContainerStyle" Value="{DynamicResource SidebarNavItem}" />
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Grid Height="44">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="28" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Glyph}" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="14" FontWeight="Bold"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SidebarNavItem" TargetType="ListBoxItem">
+            <Setter Property="AutomationProperties.Name" Value="{Binding Title}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Margin" Value="0,1" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="{StaticResource SidebarMutedBrush}" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid x:Name="NavRoot" Height="44">
+                            <Border x:Name="Pill" CornerRadius="10" Background="Transparent"
+                                    BorderBrush="Transparent" BorderThickness="1" />
+                            <Border x:Name="Bar" Width="3" Height="22" CornerRadius="2"
+                                    HorizontalAlignment="Left" Margin="7,0,0,0"
+                                    Background="{StaticResource SidebarAccentBrush}" Opacity="0"
+                                    Effect="{StaticResource SidebarGlowEffect}" />
+                            <ContentPresenter Margin="20,0,12,0" VerticalAlignment="Center" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Pill" Property="Background" Value="{StaticResource SidebarHoverBrush}" />
+                                <Setter Property="Foreground" Value="{StaticResource SidebarTextBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Pill" Property="Background" Value="{StaticResource SidebarActiveGradientBrush}" />
+                                <Setter TargetName="Pill" Property="BorderBrush" Value="#1B607A" />
+                                <Setter TargetName="Pill" Property="Effect" Value="{StaticResource SidebarGlowEffect}" />
+                                <Setter TargetName="Bar" Property="Opacity" Value="1" />
+                                <Setter Property="Foreground" Value="{StaticResource SidebarTextBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="30" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Canvas IsHitTestVisible="False" ClipToBounds="True">
+                <Ellipse Width="620" Height="620" Canvas.Left="-250" Canvas.Top="-300" Fill="#0E7490" Opacity="0.18">
+                    <Ellipse.Effect><BlurEffect Radius="170" /></Ellipse.Effect>
+                </Ellipse>
+                <Ellipse Width="520" Height="520" Canvas.Right="-160" Canvas.Top="-220" Fill="#2563EB" Opacity="0.1">
+                    <Ellipse.Effect><BlurEffect Radius="180" /></Ellipse.Effect>
+                </Ellipse>
+                <Ellipse Width="460" Height="460" Canvas.Left="330" Canvas.Bottom="-300" Fill="#0E7490" Opacity="0.08">
+                    <Ellipse.Effect><BlurEffect Radius="160" /></Ellipse.Effect>
+                </Ellipse>
+            </Canvas>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="264" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Border Background="{StaticResource SidebarGradientBrush}" BorderBrush="{StaticResource SidebarBorderBrush}"
+                        BorderThickness="0,0,1,0">
+                    <DockPanel Margin="14,18,14,12">
+                        <Grid DockPanel.Dock="Top" Margin="4,2,4,16">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="46" Height="46" Source="/Assets/Veyra-256.png" Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality" RenderTransformOrigin="0.5,0.5">
+                                    <Image.Effect>
+                                        <DropShadowEffect Color="#38BDF8" BlurRadius="26" ShadowDepth="0" Opacity="0.62" />
+                                    </Image.Effect>
+                                    <Image.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                    <DoubleAnimation Storyboard.TargetProperty="(Effect).(DropShadowEffect.Opacity)"
+                                                                     From="0.42" To="0.8" Duration="0:0:2.6">
+                                                        <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut" /></DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Image.Triggers>
+                                </Image>
+                                <StackPanel Margin="13,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="Veyra" FontFamily="{StaticResource DisplayFont}" FontSize="22"
+                                               FontWeight="Bold" Foreground="{StaticResource SidebarTextBrush}"
+                                               TextOptions.TextRenderingMode="ClearType" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                        <TextBlock Text="DISPLAY &amp; COLOUR" FontSize="8.5" FontWeight="Bold"
+                                                   Foreground="{StaticResource SidebarAccentBrush}" VerticalAlignment="Center" />
+                                        <Border Background="#082936" BorderBrush="#12485C" BorderThickness="1"
+                                                CornerRadius="4" Padding="4,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Version}" FontSize="8.5" FontWeight="Bold"
+                                                       Foreground="{StaticResource SidebarAccentBrightBrush}" />
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border DockPanel.Dock="Top" Height="1" Background="{StaticResource SidebarBorderBrush}"
+                                Margin="6,0,6,14" />
+
+                        <ListBox Style="{StaticResource SidebarNavList}" ItemsSource="{Binding NavigationView}"
+                                 SelectedItem="{Binding SelectedNavigationEntry, Mode=TwoWay}"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,0,0,6">
+                            <ListBox.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="12,12,0,6">
+                                                <Border Width="14" Height="2" CornerRadius="1"
+                                                        Background="{StaticResource SidebarAccentBrush}"
+                                                        Opacity="0.9" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding Name}" FontSize="9.5" FontWeight="Bold"
+                                                           Foreground="{StaticResource SidebarAccentBrightBrush}"
+                                                           Margin="7,0,0,0" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ListBox.GroupStyle>
+                        </ListBox>
+                    </DockPanel>
+                </Border>
+
+                <Grid Grid.Column="1">
+                    <ContentControl x:Name="PageHost" Content="{Binding CurrentPage}"
+                                    RenderTransformOrigin="0.5,0.5">
+                        <ContentControl.RenderTransform>
+                            <TranslateTransform x:Name="PageMove" X="0" Y="0" />
+                        </ContentControl.RenderTransform>
+                    </ContentControl>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Margin="0,5,9,0" shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Button Style="{StaticResource TitleBarButton}" Click="Minimise_Click" ToolTip="Minimise">
+                            <Path Width="10" Height="10" Stretch="None" StrokeThickness="1"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  Data="M0,5 L10,5" />
+                        </Button>
+                        <Button Style="{StaticResource TitleBarButton}" Click="Maximise_Click" ToolTip="Maximise">
+                            <Path Width="10" Height="10" Stretch="None" StrokeThickness="1"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  Data="M0.5,0.5 L9.5,0.5 L9.5,9.5 L0.5,9.5 Z" />
+                        </Button>
+                        <Button Style="{StaticResource TitleBarButton}" Click="Close_Click" ToolTip="Close" Tag="Close">
+                            <Path Width="10" Height="10" Stretch="None" StrokeThickness="1"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  Data="M0,0 L10,10 M10,0 L0,10" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="1" Background="{StaticResource StatusBarGradientBrush}"
+                BorderBrush="#12303D" BorderThickness="0,1,0,0">
+            <Grid Margin="18,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Grid Width="7" Height="7" VerticalAlignment="Center">
+                        <Ellipse Fill="{StaticResource SuccessBrush}" Effect="{StaticResource SuccessGlowEffect}" />
+                    </Grid>
+                    <TextBlock Text="{Binding Status}" VerticalAlignment="Center" FontSize="11"
+                               Foreground="{StaticResource TextFaintBrush}" TextTrimming="CharacterEllipsis"
+                               Margin="8,0,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Text="GPL-3.0" FontSize="9.5" Foreground="{StaticResource TextFaintBrush}"
+                               Margin="0,0,10,0" />
+                    <Border Background="#08212C" CornerRadius="4" Padding="6,1">
+                        <TextBlock Text="{Binding Version}" FontSize="9" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextMutedBrush}" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

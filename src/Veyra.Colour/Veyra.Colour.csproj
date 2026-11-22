@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Veyra.Colour</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Veyra.Core\Veyra.Core.csproj" />
+    <ProjectReference Include="..\Veyra.Storage\Veyra.Storage.csproj" />
+    <ProjectReference Include="..\Veyra.Display\Veyra.Display.csproj" />
+  </ItemGroup>
+</Project>

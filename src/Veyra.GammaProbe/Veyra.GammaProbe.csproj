@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Veyra.GammaProbe</RootNamespace>
+    <AssemblyName>Veyra.GammaProbe</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Veyra.Colour\Veyra.Colour.csproj" />
+  </ItemGroup>
+</Project>

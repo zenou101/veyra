@@ -1,0 +1,192 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="BgColor">#050B10</Color>
+    <Color x:Key="SurfaceColor">#08141B</Color>
+    <Color x:Key="SurfaceRaisedColor">#0D202B</Color>
+    <Color x:Key="SurfaceHoverColor">#123241</Color>
+    <Color x:Key="BorderColor">#1B3340</Color>
+    <Color x:Key="BorderStrongColor">#2A5264</Color>
+    <Color x:Key="TextColor">#F2FBFF</Color>
+    <Color x:Key="TextMutedColor">#9FB8C6</Color>
+    <Color x:Key="TextFaintColor">#6C8795</Color>
+    <Color x:Key="AccentColor">#38BDF8</Color>
+    <Color x:Key="AccentBrightColor">#7DD3FC</Color>
+    <Color x:Key="AccentSoftColor">#0B2A3A</Color>
+    <Color x:Key="PinkColor">#67E8F9</Color>
+    <Color x:Key="BlueColor">#60A5FA</Color>
+    <Color x:Key="NavSelectedColor">#0C2A39</Color>
+    <Color x:Key="SuccessColor">#5EEAD4</Color>
+    <Color x:Key="WarningColor">#FBBF24</Color>
+    <Color x:Key="DangerColor">#F87171</Color>
+    <Color x:Key="SidebarTextColor">#F2FBFF</Color>
+    <Color x:Key="SidebarMutedColor">#9FB8C6</Color>
+    <Color x:Key="SidebarFaintColor">#678795</Color>
+    <Color x:Key="OceanAccentColor">#38BDF8</Color>
+    <Color x:Key="OceanBrightColor">#7DD3FC</Color>
+    <Color x:Key="SidebarBorderColor">#123747</Color>
+
+    <SolidColorBrush x:Key="BgBrush" Color="{StaticResource BgColor}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}" />
+    <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="{StaticResource SurfaceRaisedColor}" />
+    <SolidColorBrush x:Key="SurfaceHoverBrush" Color="{StaticResource SurfaceHoverColor}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+    <SolidColorBrush x:Key="BorderStrongBrush" Color="{StaticResource BorderStrongColor}" />
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
+    <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMutedColor}" />
+    <SolidColorBrush x:Key="TextFaintBrush" Color="{StaticResource TextFaintColor}" />
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="AccentBrightBrush" Color="{StaticResource AccentBrightColor}" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="{StaticResource AccentSoftColor}" />
+    <SolidColorBrush x:Key="PinkBrush" Color="{StaticResource PinkColor}" />
+    <SolidColorBrush x:Key="BlueBrush" Color="{StaticResource BlueColor}" />
+    <SolidColorBrush x:Key="NavSelectedBrush" Color="{StaticResource NavSelectedColor}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}" />
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
+    <SolidColorBrush x:Key="SidebarTextBrush" Color="{StaticResource SidebarTextColor}" />
+    <SolidColorBrush x:Key="SidebarMutedBrush" Color="{StaticResource SidebarMutedColor}" />
+    <SolidColorBrush x:Key="SidebarFaintBrush" Color="{StaticResource SidebarFaintColor}" />
+    <SolidColorBrush x:Key="SidebarAccentBrush" Color="{StaticResource OceanAccentColor}" />
+    <SolidColorBrush x:Key="SidebarAccentBrightBrush" Color="{StaticResource OceanBrightColor}" />
+    <SolidColorBrush x:Key="SidebarBorderBrush" Color="{StaticResource SidebarBorderColor}" />
+    <SolidColorBrush x:Key="SidebarHoverBrush" Color="#0A2634" />
+    <SolidColorBrush x:Key="SidebarCardBrush" Color="#071C27" />
+
+    <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#67E8F9" />
+        <GradientStop Offset="0.48" Color="#38BDF8" />
+        <GradientStop Offset="1" Color="#2563EB" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="TitleGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Offset="0" Color="#FFFFFF" />
+        <GradientStop Offset="0.55" Color="#DDF8FF" />
+        <GradientStop Offset="1" Color="#7DD3FC" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="CardGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#0C1C25" />
+        <GradientStop Offset="0.55" Color="#08141B" />
+        <GradientStop Offset="1" Color="#061016" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="CardHoverGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#123342" />
+        <GradientStop Offset="1" Color="#08151D" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="HeroGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#0B3B50" />
+        <GradientStop Offset="0.55" Color="#082838" />
+        <GradientStop Offset="1" Color="#06131B" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="SidebarGradientBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#0A202B" />
+        <GradientStop Offset="0.45" Color="#06141D" />
+        <GradientStop Offset="1" Color="#040B10" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="SidebarActiveGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Offset="0" Color="#103F54" />
+        <GradientStop Offset="0.6" Color="#0A2B3B" />
+        <GradientStop Offset="1" Color="#071C27" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="NavActiveGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Offset="0" Color="#0E3A4E" />
+        <GradientStop Offset="1" Color="#071B26" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="LogoGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#E0FBFF" />
+        <GradientStop Offset="0.5" Color="#38BDF8" />
+        <GradientStop Offset="1" Color="#1D4ED8" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="StatusBarGradientBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#07141B" />
+        <GradientStop Offset="1" Color="#040A0E" />
+    </LinearGradientBrush>
+
+    <DropShadowEffect x:Key="CardShadowEffect" Color="#000000" BlurRadius="22" ShadowDepth="5" Opacity="0.42" />
+    <DropShadowEffect x:Key="CardHoverEffect" Color="#38BDF8" BlurRadius="30" ShadowDepth="4" Opacity="0.34" />
+    <DropShadowEffect x:Key="AccentGlowEffect" Color="#38BDF8" BlurRadius="20" ShadowDepth="0" Opacity="0.55" />
+    <DropShadowEffect x:Key="SidebarGlowEffect" Color="#38BDF8" BlurRadius="24" ShadowDepth="0" Opacity="0.38" />
+    <DropShadowEffect x:Key="StrongGlowEffect" Color="#38BDF8" BlurRadius="30" ShadowDepth="0" Opacity="0.7" />
+    <DropShadowEffect x:Key="SuccessGlowEffect" Color="#5EEAD4" BlurRadius="12" ShadowDepth="0" Opacity="0.75" />
+    <DropShadowEffect x:Key="SoftGlowEffect" Color="#60A5FA" BlurRadius="18" ShadowDepth="0" Opacity="0.4" />
+
+    <FontFamily x:Key="DisplayFont">Segoe UI Variable Display, Segoe UI Semibold, Segoe UI</FontFamily>
+    <FontFamily x:Key="TextFont">Segoe UI Variable Text, Segoe UI</FontFamily>
+    <FontFamily x:Key="MonoFont">Cascadia Mono, Consolas</FontFamily>
+
+    <Style TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource TextFont}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+    </Style>
+
+    <Style x:Key="PageTitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+        <Setter Property="FontSize" Value="34" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource TitleGradientBrush}" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+    </Style>
+
+    <Style x:Key="PageSubtitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13.5" />
+        <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Margin" Value="0,7,0,0" />
+    </Style>
+
+    <Style x:Key="PageContent" TargetType="StackPanel">
+        <Setter Property="Margin" Value="38,32,38,34" />
+    </Style>
+
+    <Style x:Key="SectionTitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource TextFont}" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource AccentBrightBrush}" />
+        <Setter Property="Margin" Value="0,0,0,14" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+    </Style>
+
+    <Style x:Key="Label" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="10.5" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextFaintBrush}" />
+    </Style>
+
+    <Style x:Key="Value" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+
+    <Style x:Key="Caption" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="LineHeight" Value="18" />
+    </Style>
+
+    <Style x:Key="Mono" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource MonoFont}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+    </Style>
+
+    <Style x:Key="Micro" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="9.5" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource AccentBrightBrush}" />
+    </Style>
+</ResourceDictionary>

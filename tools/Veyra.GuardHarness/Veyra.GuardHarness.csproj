@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Veyra.GuardHarness</RootNamespace>
+    <AssemblyName>Veyra.GuardHarness</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Veyra.Display\Veyra.Display.csproj" />
+    <ProjectReference Include="..\..\src\Veyra.DisplayGuard\Veyra.DisplayGuard.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <Target Name="CopyGuard" AfterTargets="Build">
+    <ItemGroup>
+      <GuardFiles Include="$(MSBuildThisFileDirectory)..\..\artifacts\guard\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(GuardFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+</Project>
