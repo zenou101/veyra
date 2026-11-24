@@ -24,8 +24,8 @@ into games or touch anti-cheat systems.
 
 [**Veyra website**](https://zenou101.github.io/veyra/) · [Portable ZIP](https://github.com/zenou101/veyra/releases/download/v1.0.0/Veyra-Portable-1.0.0-x64.zip) · [Installer MSI](https://github.com/zenou101/veyra/releases/download/v1.0.0/Veyra-Setup-1.0.0-x64.msi)
 
-Both builds are self-contained Windows x64. The installer is per-user and needs no administrator
-rights. Release binaries are unsigned and are published on GitHub Releases, not in the source tree.
+Both builds are self-contained Windows x64. The installer is per-user, adds Start-menu and desktop
+shortcuts, and needs no administrator rights. Release binaries are unsigned and are published on GitHub Releases, not in the source tree.
 
 | Display | Library |
 | :---: | :---: |

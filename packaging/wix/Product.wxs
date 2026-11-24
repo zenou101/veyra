@@ -21,6 +21,7 @@
     <Feature Id="Main" Title="Veyra" Level="1">
       <ComponentGroupRef Id="AppFiles" />
       <ComponentRef Id="ShortcutComponent" />
+      <ComponentRef Id="DesktopShortcutComponent" />
     </Feature>
   </Package>
 
@@ -30,6 +31,12 @@
                 Target="[INSTALLFOLDER]Veyra.exe" WorkingDirectory="INSTALLFOLDER" Icon="VeyraIcon" />
       <RemoveFolder Id="RemoveShortcutFolder" On="uninstall" />
       <RegistryValue Root="HKCU" Key="Software\Veyra" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
+    </Component>
+
+    <Component Id="DesktopShortcutComponent" Directory="DesktopFolder" Guid="C4E7A921-6D3B-4F82-9C51-8A2E7B1D4F60">
+      <Shortcut Id="VeyraDesktop" Name="Veyra" Description="Veyra 1.0.0"
+                Target="[INSTALLFOLDER]Veyra.exe" WorkingDirectory="INSTALLFOLDER" Icon="VeyraIcon" />
+      <RegistryValue Root="HKCU" Key="Software\Veyra" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
     </Component>
   </Fragment>
 </Wix>

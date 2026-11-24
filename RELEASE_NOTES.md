@@ -32,7 +32,7 @@ game performs, and it does not inject into games or touch anti-cheat systems.
 ## Download
 
 - **`Veyra-Setup-1.0.0-x64.msi`** — per-user installer. Installs into `%LOCALAPPDATA%\Veyra`
-  with a Start-menu shortcut, without an administrator prompt.
+  with Start-menu and desktop shortcuts, without an administrator prompt.
 - **`Veyra-Portable-1.0.0-x64.zip`** — self-contained Windows x64 build. Extract it and run
   `Veyra.exe`; no installer or administrator rights are required.
 - **`SHA256SUMS.txt`** — checksums for the release assets. Verify with

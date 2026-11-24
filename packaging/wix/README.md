@@ -20,10 +20,9 @@ do not hand-edit or commit it.
 ## Notes
 
 - The installer is unsigned. Windows SmartScreen will warn.
-- Uninstalling removes the program files and the Start-menu shortcut. User settings, presets and
+- The installer creates per-user Start-menu and desktop shortcuts.
+- Uninstalling removes the program files and both shortcuts. User settings, presets and
   the colour recovery snapshot in `%LOCALAPPDATA%\Veyra` are left in place so a reinstall keeps your
   configuration; delete that folder to remove everything.
 - `Veyra.DisplayGuard.exe` is installed next to `Veyra.exe`; display changes are refused when it is
   missing.
-- Installation of the generated MSI was not exercised in this release; the portable ZIP is the
-  verified artifact.
