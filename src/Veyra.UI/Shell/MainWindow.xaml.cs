@@ -17,6 +17,9 @@ public partial class MainWindow : Window
     private HotkeyService? _hotkeys;
     private NotifyIcon? _tray;
     private bool _exiting;
+    private double _baseWidth;
+    private double _baseHeight;
+    private double _appliedZoom;
 
     public MainWindow()
     {
@@ -26,8 +29,11 @@ public partial class MainWindow : Window
         DataContext = _shell;
         _shell.PropertyChanged += OnShellPropertyChanged;
 
-        Width = AppServices.Settings.WindowWidth;
-        Height = AppServices.Settings.WindowHeight;
+        _baseWidth = AppServices.Settings.WindowWidth;
+        _baseHeight = AppServices.Settings.WindowHeight;
+        _appliedZoom = Math.Clamp(_shell.ZoomScale, 0.8, 1.25);
+        Width = _baseWidth * _appliedZoom;
+        Height = _baseHeight * _appliedZoom;
         if (!double.IsNaN(AppServices.Settings.WindowLeft)) Left = AppServices.Settings.WindowLeft;
         if (!double.IsNaN(AppServices.Settings.WindowTop)) Top = AppServices.Settings.WindowTop;
         if (AppServices.Settings.WindowMaximized) WindowState = WindowState.Maximized;
@@ -57,17 +63,47 @@ public partial class MainWindow : Window
         {
             AnimatePage();
         }
+
+        if (e.PropertyName == nameof(ShellViewModel.ZoomScale))
+        {
+            ApplyZoom();
+        }
+    }
+
+    /// <summary>
+    /// Interface zoom scales the content layout, so the window grows with it. Window bounds are
+    /// saved normalised to 100% and restored at the current zoom, which keeps the saved size stable.
+    /// </summary>
+    private void ApplyZoom()
+    {
+        var scale = Math.Clamp(_shell.ZoomScale, 0.8, 1.25);
+        if (Math.Abs(scale - _appliedZoom) < 0.001) return;
+
+        _baseWidth = Width / _appliedZoom;
+        _baseHeight = Height / _appliedZoom;
+
+        var work = SystemParameters.WorkArea;
+        var targetWidth = Math.Max(MinWidth, Math.Min(_baseWidth * scale, work.Width));
+        var targetHeight = Math.Max(MinHeight, Math.Min(_baseHeight * scale, work.Height));
+        var previousWidth = Width;
+        var previousHeight = Height;
+
+        Width = targetWidth;
+        Height = targetHeight;
+        Left = Math.Max(work.Left, Math.Min(Left + (previousWidth - targetWidth) / 2, work.Right - targetWidth));
+        Top = Math.Max(work.Top, Math.Min(Top + (previousHeight - targetHeight) / 2, work.Bottom - targetHeight));
+        _appliedZoom = scale;
     }
 
     private void AnimatePage()
     {
         var ease = new CubicEase { EasingMode = EasingMode.EaseOut };
         PageHost.BeginAnimation(OpacityProperty,
-            new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(280)) { EasingFunction = ease });
+            new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(240)) { EasingFunction = ease });
         PageMove.BeginAnimation(System.Windows.Media.TranslateTransform.XProperty,
-            new DoubleAnimation(18, 0, TimeSpan.FromMilliseconds(320)) { EasingFunction = ease });
+            new DoubleAnimation(14, 0, TimeSpan.FromMilliseconds(280)) { EasingFunction = ease });
         PageMove.BeginAnimation(System.Windows.Media.TranslateTransform.YProperty,
-            new DoubleAnimation(6, 0, TimeSpan.FromMilliseconds(320)) { EasingFunction = ease });
+            new DoubleAnimation(5, 0, TimeSpan.FromMilliseconds(280)) { EasingFunction = ease });
     }
 
     private void SetupHotkeys()
@@ -100,38 +136,27 @@ public partial class MainWindow : Window
                 _ = ToggleColourAsync();
                 break;
             case HotkeyAction.RestoreDefaults:
-                _ = _shell.Colours.RestoreAsync();
+                _ = _shell.Display.RestoreAsync();
                 break;
             case HotkeyAction.NextPreset:
-                _ = NextPresetAsync();
+                _ = _shell.Display.CyclePresetAsync();
                 break;
         }
     }
 
     private async System.Threading.Tasks.Task ToggleColourAsync()
     {
-        var display = _shell.Colours.SelectedDisplay;
+        var display = _shell.Display.SelectedDisplay;
         if (display is null) return;
 
         var current = await AppServices.Colour.GetCurrentStateAsync(display, default);
         var neutral = current.Values.Gamma is null or 1 && current.Values.Brightness is null or 0;
         _ = neutral
-            ? await AppServices.Colour.ApplyAsync(display, BuiltInPresets.Create().First(p => p.Id == "builtin.balanced").Colour, default)
+            ? await AppServices.Colour.ApplyAsync(display,
+                BuiltInPresets.Create().First(p => p.Id == "builtin.balanced").Colour, default)
             : await AppServices.Colour.RestoreAsync(display, default);
     }
 
-    private async System.Threading.Tasks.Task NextPresetAsync()
-    {
-        var display = _shell.Colours.SelectedDisplay;
-        if (display is null) return;
-
-        var presets = await AppServices.Presets.GetAllAsync(default);
-        if (presets.Count == 0) return;
-
-        var index = presets.ToList().FindIndex(p => p.Id == _shell.Colours.SelectedPreset?.Id);
-        var next = presets[(index + 1) % presets.Count];
-        await AppServices.Colour.ApplyAsync(display, next.Colour, default);
-    }
 
     private void SetupTray()
     {
@@ -181,15 +206,17 @@ public partial class MainWindow : Window
         System.Windows.Application.Current.Shutdown();
     }
 
-    private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
+    private void OnClosing(object? sender, CancelEventArgs e)
     {
+        var normal = WindowState == WindowState.Normal;
         AppServices.SaveSettings(s => s with
         {
-            WindowWidth = Width,
-            WindowHeight = Height,
+            WindowWidth = normal ? Width / _appliedZoom : s.WindowWidth,
+            WindowHeight = normal ? Height / _appliedZoom : s.WindowHeight,
             WindowLeft = Left,
             WindowTop = Top,
-            WindowMaximized = WindowState == WindowState.Maximized
+            WindowMaximized = WindowState == WindowState.Maximized,
+            LastPage = _shell.CurrentPage?.Title ?? s.LastPage
         });
 
         if (!_exiting && AppServices.Settings.CloseToTray)
@@ -200,12 +227,13 @@ public partial class MainWindow : Window
         }
     }
 
-    private void OnClosed(object? sender, EventArgs e)
+    private void OnClosed(object sender, EventArgs e)
     {
         _hotkeys?.Dispose();
         _tray?.Dispose();
-        _shell.Performance.Stop();
     }
+
+    private void More_Click(object sender, RoutedEventArgs e) => _shell.SelectMore();
 
     private void Minimise_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 

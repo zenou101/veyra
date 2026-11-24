@@ -70,7 +70,7 @@ This is recorded as a limitation, not a success.
 ## Application
 
 `Veyra.exe` (Debug and self-contained Release) starts, renders the shell and pages, and reads both
-displays and their modes. Screenshot: `docs/screenshots/overview.png`.
+displays and their modes. Screenshot: `docs/screenshots/resolution.png`.
 
 ## AMD driver saturation (ADL2, verified)
 

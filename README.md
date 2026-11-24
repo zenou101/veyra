@@ -20,24 +20,36 @@ into games or touch anti-cheat systems.
 
 </div>
 
-| Overview | Colours |
+| Display | Library |
 | :---: | :---: |
-| ![Veyra Overview](docs/screenshots/overview.png) | ![Veyra Colours](docs/screenshots/colours.png) |
+| ![Veyra Display](docs/screenshots/display.png) | ![Veyra Library](docs/screenshots/library.png) |
 
 ## Overview
 
 Veyra is a focused WPF app for Windows 10 x64. It detects the complete display setup,
 applies changes only when the driver accepts them, and keeps an exact snapshot so every
-change can be undone. The interface has six pages:
+change can be undone. A compact navigation sidebar keeps the nine pages within reach:
 
-- **Overview** — display count, the active colour path and a plain-language GPU support summary.
-- **Displays** — monitor modes and refresh rates, applied with a 15-second confirmation and an
-  out-of-process rollback guard.
-- **Colours** — per-display AMD or NVIDIA driver saturation plus live brightness, contrast,
-  gamma and temperature controls, seven built-in presets and one-click restore.
+- **Display** — driver saturation and Windows gamma side by side, brightness, contrast,
+  temperature, blacks, highlights and red tint in one fine-tuning grid, plus scene presets.
+- **Library** — every built-in scene and saved look in one place; apply, rename or delete
+  saved looks without leaving the page.
+- **Resolution** — monitor modes and refresh rates, applied with a 15-second confirmation and
+  an out-of-process rollback guard.
+- **Monitor** — the monitor's own DDC/CI settings: brightness, contrast and low blue light
+  where the display exposes them, with a one-click restore.
+- **Customize** — Default or Slate panels, panel opacity, a background picture, soft or petal
+  backdrop, and a live text-contrast check.
 - **Crosshair** — a click-through layered window drawn by Windows, with no injection or hooks.
-- **Hotkeys** — global shortcuts with conflict detection, rebindable in the app.
-- **Settings** — restore-on-exit, close-to-tray, start minimised, provider status and data location.
+- **Profiles** — named game profiles that store a look and apply it on request.
+- **Dark Boost & Zoom** — deepen shadows without flattening highlights, and scale Veyra's
+  interface from 80 % to 125 %.
+- **More** — startup and close behaviour, global hotkeys, provider status, licence and data
+  location.
+
+The layout is new; the identity is the original Veyra one. The dark navy surfaces, cyan
+accents, glass cards, gradient titles, rounded controls, slider and toggle styling, hover
+glows and ambient background light all come from the original theme.
 
 ## Colour support
 
@@ -62,7 +74,7 @@ rollback if the app stops responding.
 | --- | --- |
 | Debug and Release builds (win-x64) | pass |
 | Unit tests (Core, Storage, Display, Games) | **57 passed, 0 failed** |
-| App launch and rendering | verified; screenshots above |
+| App launch, navigation and all nine pages | verified; screenshots above |
 | Windows gamma ramp write/read | accepted; ramp readback changed and restored |
 | AMD ADL2 saturation write/read | **verified 0–300 %**: 100 → 150 → 100 through the slider, bypass and restore |
 | AMD driver saturation crash recovery | **verified**: 170 % survived a killed process and was restored to 100 % on the next launch |
@@ -134,6 +146,8 @@ More detail: [ARCHITECTURE.md](ARCHITECTURE.md), [BUILDING.md](BUILDING.md),
   not implemented; Intel users get the Windows ramp controls only.
 - HDR capability is read and displayed, but HDR switching is not offered.
 - Windows 11, hybrid laptops and multi-GPU systems are not verified.
+- Monitor controls depend on DDC/CI support in the display and adapter. Veyra disables a control
+  when the monitor refuses it rather than showing a slider that cannot work.
 - A crosshair cannot be guaranteed above every exclusive-fullscreen game.
 - The display-change dialog's Keep/Revert buttons were not separately clicked through in the
   recorded test; the guard's own timeout rollback was verified.

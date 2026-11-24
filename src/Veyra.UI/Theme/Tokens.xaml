@@ -124,11 +124,17 @@
 
     <Style TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource TextFont}" />
-        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
         <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
     </Style>
+
+    <!-- Foreground is inherited from the page instead of forced on every TextBlock, so a
+         button or selected chip can hand its own foreground to its content. -->
+    <Style TargetType="{x:Type UserControl}">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+
 
     <Style x:Key="PageTitle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />

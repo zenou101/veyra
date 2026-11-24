@@ -16,6 +16,13 @@ public sealed record AppSettings
     public string Accent { get; init; } = "Violet";
     public string Language { get; init; } = "en-GB";
 
+    // Customize page. PanelOpacity is stored as 0.55–1.0, Backdrop is Off, Soft or Petals.
+    public double PanelOpacity { get; init; } = 0.92;
+    public double UiScale { get; init; } = 1.0;
+    public string AppearanceMode { get; init; } = "Default";
+    public string Backdrop { get; init; } = "Off";
+    public string? BackgroundImagePath { get; init; }
+
     public bool RestoreOnExit { get; init; } = true;
     public bool AutomaticGameProfiles { get; init; } = true;
     public bool ProfileNotifications { get; init; } = true;

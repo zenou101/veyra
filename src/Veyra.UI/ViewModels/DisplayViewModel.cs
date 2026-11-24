@@ -9,23 +9,7 @@ using Veyra.UI.Infrastructure;
 
 namespace Veyra.UI.ViewModels;
 
-public sealed class ColourControlRow : ObservableObject
-{
-    public ColourControlRow(ColourControlCapability capability)
-    {
-        Capability = capability;
-    }
-
-    public ColourControlCapability Capability { get; }
-    public string Name => Capability.DisplayName;
-    public bool IsSupported => Capability.IsSupported;
-    public string Range => Capability.IsSupported
-        ? $"{Capability.Minimum:0.##} – {Capability.Maximum:0.##} {Capability.Unit}".Trim()
-        : "Unavailable";
-    public string Reason => Capability.IsSupported ? Capability.Source : Capability.Reason;
-}
-
-public sealed class ColoursViewModel : PageViewModel
+public sealed class DisplayViewModel : PageViewModel
 {
     private DisplayInfo? _selectedDisplay;
     private string _status = "Reading the driver's real capabilities…";
@@ -35,6 +19,9 @@ public sealed class ColoursViewModel : PageViewModel
     private double _temperature = 6500;
     private double _saturation = 100;
     private double _saturationMaximum = SaturationScale.MaximumPercent;
+    private double _shadow;
+    private double _blackLevel;
+    private double _redTint;
     private string _saturationProviderLabel = "DRIVER";
     private bool _saturationOn = true;
     private bool _saturationEnabled;
@@ -43,42 +30,41 @@ public sealed class ColoursViewModel : PageViewModel
     private CancellationTokenSource? _rampLive;
     private string _saturationReason = string.Empty;
     private string _presetName = string.Empty;
-    private Preset? _selectedPreset;
+    private int _presetIndex = -1;
 
-    public override string Title => "Colours";
-    public override string Subtitle => "Real AMD or NVIDIA driver saturation plus Windows ramp controls. One click restores the original colours.";
-    public override string Glyph => "\uE790";
+    public override string Title => "Display";
+    public override string Subtitle => "Scenes are starting points. The sliders work whatever you play.";
+    public override string Glyph => "\uE7F4";
 
     public ObservableCollection<DisplayInfo> Displays { get; } = new();
-    public ObservableCollection<ColourControlRow> Controls { get; } = new();
-    public ObservableCollection<Preset> Presets { get; } = new();
+    public ObservableCollection<PresetCardViewModel> Presets { get; } = new();
 
     public DisplayInfo? SelectedDisplay
     {
         get => _selectedDisplay;
         set
         {
-            if (Set(ref _selectedDisplay, value)) _ = LoadForDisplayAsync();
+            if (!Set(ref _selectedDisplay, value) || value is null) return;
+            _ = LoadForDisplayAsync();
         }
     }
 
-    public Preset? SelectedPreset
-    {
-        get => _selectedPreset;
-        set
-        {
-            if (Set(ref _selectedPreset, value)) OnPropertyChanged(nameof(CanDeletePreset));
-        }
-    }
-
-    public bool CanDeletePreset => SelectedPreset is { IsBuiltIn: false };
-    public string PresetName { get => _presetName; set => Set(ref _presetName, value); }
+    public string DisplayName => SelectedDisplay?.FriendlyName ?? "No display";
+    public string DisplayMeta => SelectedDisplay is null
+        ? "Waiting for Windows"
+        : $"{SelectedDisplay.ResolutionLabel} · {SelectedDisplay.RefreshLabel} · {(SelectedDisplay.VendorId ?? "Generic adapter")}";
+    public string DisplayCount => Displays.Count == 1 ? "1 display" : $"{Displays.Count} displays";
 
     public string Status { get => _status; private set => Set(ref _status, value); }
+    public string PresetName { get => _presetName; set => Set(ref _presetName, value); }
+
     public double Brightness { get => _brightness; set { if (Set(ref _brightness, value)) ScheduleRampApply(); } }
     public double Contrast { get => _contrast; set { if (Set(ref _contrast, value)) ScheduleRampApply(); } }
     public double Gamma { get => _gamma; set { if (Set(ref _gamma, value)) ScheduleRampApply(); } }
     public double Temperature { get => _temperature; set { if (Set(ref _temperature, value)) ScheduleRampApply(); } }
+    public double Shadow { get => _shadow; set { if (Set(ref _shadow, value)) ScheduleRampApply(); } }
+    public double BlackLevel { get => _blackLevel; set { if (Set(ref _blackLevel, value)) ScheduleRampApply(); } }
+    public double RedTint { get => _redTint; set { if (Set(ref _redTint, value)) ScheduleRampApply(); } }
 
     /// <summary>0–300 % on AMD, or the NVIDIA driver maximum; 100 is neutral.</summary>
     public double Saturation
@@ -120,6 +106,7 @@ public sealed class ColoursViewModel : PageViewModel
             if (Set(ref _saturationEnabled, value)) OnPropertyChanged(nameof(SaturationRange));
         }
     }
+
     public string SaturationReason { get => _saturationReason; private set => Set(ref _saturationReason, value); }
 
     public override async Task LoadAsync()
@@ -131,11 +118,22 @@ public sealed class ColoursViewModel : PageViewModel
             Displays.Clear();
             foreach (var display in displays) Displays.Add(display);
 
-            Presets.Clear();
-            foreach (var preset in await AppServices.Presets.GetAllAsync(default)) Presets.Add(preset);
+            await ReloadPresetsAsync();
 
-            SelectedDisplay = Displays.FirstOrDefault(d => d.IsPrimary) ?? Displays.FirstOrDefault();
-            await LoadForDisplayAsync();
+            var current = SelectedDisplay;
+            SelectedDisplay = displays.FirstOrDefault(d => d.IsPrimary) ?? displays.FirstOrDefault();
+            if (SelectedDisplay is null)
+            {
+                Status = "No connected display was detected. Colour controls need an active display.";
+            }
+            else if (ReferenceEquals(current, SelectedDisplay))
+            {
+                await LoadForDisplayAsync();
+            }
+
+            OnPropertyChanged(nameof(DisplayName));
+            OnPropertyChanged(nameof(DisplayMeta));
+            OnPropertyChanged(nameof(DisplayCount));
         }
         catch (Exception ex)
         {
@@ -149,6 +147,8 @@ public sealed class ColoursViewModel : PageViewModel
 
     private async Task LoadForDisplayAsync()
     {
+        OnPropertyChanged(nameof(DisplayName));
+        OnPropertyChanged(nameof(DisplayMeta));
         if (SelectedDisplay is null) return;
 
         _live?.Cancel();
@@ -157,8 +157,6 @@ public sealed class ColoursViewModel : PageViewModel
         try
         {
             var capabilities = await AppServices.Colour.GetCapabilitiesAsync(SelectedDisplay, default);
-            Controls.Clear();
-            foreach (var control in capabilities.Controls) Controls.Add(new ColourControlRow(control));
 
             var saturation = capabilities.Controls.FirstOrDefault(c => c.Control == ColourControl.Saturation);
             SaturationProviderLabel = saturation?.Source.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase) == true
@@ -174,9 +172,8 @@ public sealed class ColoursViewModel : PageViewModel
 
             var state = await AppServices.Colour.GetCurrentStateAsync(SelectedDisplay, default);
 
-            // Loading the captured state must not immediately re-apply it. The saturation
-            // maximum can also coerce the slider and write back to Saturation, so suppress
-            // all live writes until every loaded value is in place.
+            // Loading captured state must not immediately re-apply it. The saturation
+            // maximum can also coerce the slider and write back to Saturation.
             _suppressLive = true;
             try
             {
@@ -184,6 +181,9 @@ public sealed class ColoursViewModel : PageViewModel
                 Contrast = state.Values.Contrast ?? 0;
                 Gamma = state.Values.Gamma ?? 1;
                 Temperature = state.Values.Temperature ?? 6500;
+                Shadow = state.Values.Shadow ?? 0;
+                BlackLevel = state.Values.BlackLevel ?? 0;
+                RedTint = state.Values.Red ?? 0;
                 SaturationEnabled = saturation?.IsSupported == true;
                 SaturationMaximum = saturation is { IsSupported: true }
                     ? saturation.Maximum
@@ -208,53 +208,42 @@ public sealed class ColoursViewModel : PageViewModel
         }
     }
 
-    public async Task ApplyAsync()
-    {
-        if (SelectedDisplay is null) return;
-
-        _live?.Cancel();
-        _rampLive?.Cancel();
-        IsBusy = true;
-        try
-        {
-            var result = await AppServices.Colour.ApplyAsync(SelectedDisplay, CurrentSettings(), default);
-            Status = result.Message;
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
-
     private ColourSettings CurrentSettings() => new()
     {
         Brightness = Brightness,
         Contrast = Contrast,
         Gamma = Gamma,
         Temperature = Temperature,
+        Shadow = Shadow,
+        BlackLevel = BlackLevel,
+        Red = RedTint,
         Saturation = SaturationOn ? Saturation : 100
     };
 
-    public async Task ApplyPresetAsync()
+    public async Task ApplyPresetAsync(PresetCardViewModel card)
     {
-        if (SelectedDisplay is null || SelectedPreset is null) return;
+        if (SelectedDisplay is null) return;
 
         IsBusy = true;
         try
         {
             _live?.Cancel();
             _rampLive?.Cancel();
-            var result = await AppServices.Colour.ApplyAsync(SelectedDisplay, SelectedPreset.Colour, default);
-            Status = result.IsSuccess ? $"{SelectedPreset.Name}: {result.Message}" : result.Message;
+            var preset = card.Preset;
+            var result = await AppServices.Colour.ApplyAsync(SelectedDisplay, preset.Colour, default);
+            Status = result.IsSuccess ? $"{preset.Name}: {result.Message}" : result.Message;
 
             _suppressLive = true;
             try
             {
-                Brightness = SelectedPreset.Colour.Brightness ?? 0;
-                Contrast = SelectedPreset.Colour.Contrast ?? 0;
-                Gamma = SelectedPreset.Colour.Gamma ?? 1;
-                Temperature = SelectedPreset.Colour.Temperature ?? 6500;
-                Saturation = SelectedPreset.Colour.Saturation ?? 100;
+                Brightness = preset.Colour.Brightness ?? 0;
+                Contrast = preset.Colour.Contrast ?? 0;
+                Gamma = preset.Colour.Gamma ?? 1;
+                Temperature = preset.Colour.Temperature ?? 6500;
+                Shadow = preset.Colour.Shadow ?? 0;
+                BlackLevel = preset.Colour.BlackLevel ?? 0;
+                RedTint = preset.Colour.Red ?? 0;
+                Saturation = preset.Colour.Saturation ?? 100;
                 SaturationOn = true;
             }
             finally
@@ -268,12 +257,19 @@ public sealed class ColoursViewModel : PageViewModel
         }
     }
 
+    public async Task CyclePresetAsync()
+    {
+        if (Presets.Count == 0) return;
+        _presetIndex = (_presetIndex + 1) % Presets.Count;
+        await ApplyPresetAsync(Presets[_presetIndex]);
+    }
+
     public async Task SavePresetAsync()
     {
         var name = PresetName.Trim();
         if (name.Length == 0)
         {
-            Status = "Enter a preset name first.";
+            Status = "Enter a look name first.";
             return;
         }
 
@@ -283,43 +279,52 @@ public sealed class ColoursViewModel : PageViewModel
         {
             Id = "user." + Guid.NewGuid().ToString("N"),
             Name = name,
-            Description = "Saved from the Colours page.",
+            Description = "Saved from the Display page.",
             Kind = PresetKind.Colour,
-            Colour = new ColourSettings
-            {
-                Brightness = Brightness,
-                Contrast = Contrast,
-                Gamma = Gamma,
-                Temperature = Temperature,
-                Saturation = SaturationOn ? Saturation : 100
-            }
+            Colour = CurrentSettings()
         };
 
         await AppServices.Presets.SaveAsync(preset, default);
         await ReloadPresetsAsync();
-        SelectedPreset = Presets.FirstOrDefault(p => p.Id == preset.Id);
         PresetName = string.Empty;
-        Status = $"Preset '{preset.Name}' saved.";
+        Status = $"Look '{preset.Name}' saved to the library.";
     }
 
-    public async Task DeletePresetAsync()
+    public async Task ResetAsync()
     {
-        if (SelectedPreset is not { IsBuiltIn: false } preset)
+        if (SelectedDisplay is null) return;
+
+        _live?.Cancel();
+        _rampLive?.Cancel();
+        IsBusy = true;
+        try
         {
-            Status = "Built-in presets cannot be deleted.";
-            return;
+            var result = await AppServices.Colour.ApplyAsync(SelectedDisplay, ColourSettings.Neutral, default);
+
+            _suppressLive = true;
+            try
+            {
+                Brightness = 0;
+                Contrast = 0;
+                Gamma = 1;
+                Temperature = 6500;
+                Shadow = 0;
+                BlackLevel = 0;
+                RedTint = 0;
+                Saturation = 100;
+                SaturationOn = true;
+            }
+            finally
+            {
+                _suppressLive = false;
+            }
+
+            Status = result.IsSuccess ? "Neutral look applied. " + result.Message : result.Message;
         }
-
-        await AppServices.Presets.DeleteAsync(preset.Id, default);
-        await ReloadPresetsAsync();
-        Status = $"Preset '{preset.Name}' deleted.";
-    }
-
-    private async Task ReloadPresetsAsync()
-    {
-        var presets = await AppServices.Presets.GetAllAsync(default);
-        Presets.Clear();
-        foreach (var preset in presets) Presets.Add(preset);
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     public async Task RestoreAsync()
@@ -341,15 +346,32 @@ public sealed class ColoursViewModel : PageViewModel
         }
     }
 
+    private async Task ReloadPresetsAsync()
+    {
+        var presets = await AppServices.Presets.GetAllAsync(default);
+        Presets.Clear();
+
+        var order = new[]
+        {
+            "builtin.default", "builtin.balanced", "builtin.vibrant",
+            "builtin.competitive", "builtin.warm", "builtin.cool", "builtin.night"
+        };
+        foreach (var preset in presets.OrderBy(p => Array.IndexOf(order, p.Id) is var i && i < 0 ? 99 : i)
+                     .ThenBy(p => p.Name, StringComparer.OrdinalIgnoreCase))
+        {
+            Presets.Add(new PresetCardViewModel(preset));
+        }
+    }
+
     private static string BuildSaturationReason(ColourControlCapability saturation)
     {
         var isNvidia = saturation.Source.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase);
         var driverDescription = isNvidia
-            ? $"Per-display NVIDIA digital vibrance through NVAPI, not a gamma curve. 100 % is neutral and {saturation.Maximum:0} % is this driver's maximum; NVIDIA does not expose AMD's extended 300 % range. "
+            ? $"Per-display NVIDIA digital vibrance through NVAPI, not a gamma curve. 100 % is neutral and {saturation.Maximum:0} % is this driver's maximum. "
             : "Per-display AMD driver saturation, not a gamma curve. 100 % is neutral, 200 % is the driver's advertised maximum, and 300 % is the verified extended ceiling. ";
 
         return driverDescription +
-               "The exact driver value is captured before the first change and restored by the toggle, Restore original, or after a crash. Brightness and gamma stay on the Windows ramp.";
+               "The exact driver value is captured before the first change and restored by the toggle, Restore original, or after a crash.";
     }
 
     private void ScheduleRampApply()

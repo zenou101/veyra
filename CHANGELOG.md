@@ -2,29 +2,42 @@
 
 All notable changes to Veyra. The project follows semantic versioning from 1.0.0.
 
-## [Unreleased]
+## [1.0.0] — 2026-11-24
+
+First public release. Unsigned, Windows 10 22H2 x64, verified on an AMD RX 7800 XT.
 
 ### Added
 
+- Compact 96 px navigation sidebar and nine pages: Display, Library, Resolution, Monitor,
+  Customize, Crosshair, Profiles, Dark Boost & Zoom, and More.
+- Display combines per-display driver saturation and Windows gamma side by side, with
+  brightness, contrast, temperature, blacks, highlights and red tint fine-tuning and a scene
+  preset grid. Saturation and gamma update live.
+- Library for built-in scenes and user-saved looks, with apply and delete actions; Profiles for
+  named game looks applied on request.
+- DDC/CI monitor page for brightness, contrast and low blue light where the display exposes
+  them, plus one-click restore of the monitor's own settings.
+- Customize page: Default or Slate panel modes, panel opacity, a background picture, Petals or
+  Soft backdrop, and a live WCAG text-contrast readout.
+- Interface zoom from 80 % to 125 %, which grows the window with the scaled content so the
+  layout does not clip.
 - NVIDIA Digital Vibrance Control through NVAPI: per-display enumeration, live apply, readback
   verification, one-click restore and crash recovery. The UI maximum comes from the NVIDIA
   driver's own DVC range rather than assuming AMD's extended ceiling.
 
 ### Changed
 
+- The layout was reorganised around the compact sidebar while the original Veyra visual identity
+  was preserved: dark navy surfaces, cyan accents, glass cards, gradient titles, original buttons,
+  sliders, toggles, hover motion, glows, typography and rounded corners.
 - The saturation slider's maximum is supplied by the active driver (300 % on the verified AMD
   path, typically 200 % on NVIDIA). The badge identifies AMD or NVIDIA, and the description states
   which driver is active and whether the extended range is available.
-- Overview and Settings no longer describe saturation as AMD-only.
-- Sidebar rebuilt with grouped navigation, bold labels, and an ocean-blue selected state. The Local session card and sidebar licence footer were removed.
-- Overview trimmed to the driver-colour hero, with a new GPU support panel covering NVIDIA, AMD Radeon (including integrated graphics) and Intel.
 - Removed the Games sidebar page, the live Running Now process list and the automatic game-profile
-  watcher. Every colour slider on the Colours page applies continuously to the selected display
-  instead of waiting for **Apply to display**.
-- Removed the unimplemented diagnostics-logging and compact-sidebar settings, the nonfunctional
-  settings toggles and the profile-activation hotkey row. Added screen-reader names to sidebar,
-  display and preset items.
-- Replaced the remaining violet accents, hero gradient, ambient glows and app icon with the ocean-blue palette.
+  watcher. Every colour slider on Display applies continuously to the selected display instead of
+  waiting for **Apply to display**.
+- Removed the unimplemented diagnostics-logging and compact-sidebar settings and the nonfunctional
+  settings toggles. Added screen-reader names to sidebar, display and preset items.
 - Fixed the release workflow's changelog input and the remaining xUnit analyzer warning.
 
 ### Known gaps
@@ -32,11 +45,11 @@ All notable changes to Veyra. The project follows semantic versioning from 1.0.0
 - NVIDIA NVAPI was implemented but not hardware-tested: this machine has no NVIDIA GPU or
   `nvapi64.dll`. The probe reports that absence cleanly. The interop path was exercised with a
   mock NVAPI DLL, covering loading, GDI mapping, DVC read/write, driver-maximum capping and restore.
-- Release artifacts were not rebuilt for this unreleased change.
+- DDC/CI monitor support varies by display and adapter; controls the monitor refuses stay disabled.
 
-## [1.0.0] — 2026-11-22
+## [0.9.0] — 2026-11-22
 
-First full release. Unsigned, Windows 10 22H2 x64, verified on AMD RX 7800 XT.
+Pre-release build. Unsigned, Windows 10 22H2 x64, verified on AMD RX 7800 XT.
 
 ### Added
 

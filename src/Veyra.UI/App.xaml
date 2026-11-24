@@ -11,28 +11,37 @@
                 <ResourceDictionary Source="Theme/Controls.xaml" />
                 <ResourceDictionary Source="Theme/Controls2.xaml" />
                 <ResourceDictionary Source="Theme/Controls3.xaml" />
+                <ResourceDictionary Source="Theme/Layout.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate DataType="{x:Type vm:OverviewViewModel}">
-                <views:OverviewView />
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+            <DataTemplate DataType="{x:Type vm:DisplayViewModel}">
+                <views:DisplayView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:DisplaysViewModel}">
-                <views:DisplaysView />
+            <DataTemplate DataType="{x:Type vm:LibraryViewModel}">
+                <views:LibraryView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:ColoursViewModel}">
-                <views:ColoursView />
+            <DataTemplate DataType="{x:Type vm:ResolutionViewModel}">
+                <views:ResolutionView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:MonitorViewModel}">
+                <views:MonitorView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:CustomizeViewModel}">
+                <views:CustomizeView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:CrosshairViewModel}">
                 <views:CrosshairView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:PerformanceViewModel}">
-                <views:PerformanceView />
+            <DataTemplate DataType="{x:Type vm:ProfilesViewModel}">
+                <views:ProfilesView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:HotkeysViewModel}">
-                <views:HotkeysView />
+            <DataTemplate DataType="{x:Type vm:BoostViewModel}">
+                <views:BoostView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
-                <views:SettingsView />
+            <DataTemplate DataType="{x:Type vm:MoreViewModel}">
+                <views:MoreView />
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

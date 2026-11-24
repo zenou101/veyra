@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Confirm display change" Width="460" SizeToContent="Height"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
-        Background="{StaticResource SurfaceBrush}" WindowStyle="SingleBorderWindow">
+        Background="{StaticResource SurfaceBrush}" Foreground="{StaticResource TextBrush}"
+        WindowStyle="SingleBorderWindow">
     <StackPanel Margin="24">
         <TextBlock Text="Confirm this display change" Style="{StaticResource PageTitle}" FontSize="20" />
         <TextBlock x:Name="SummaryText" Style="{StaticResource PageSubtitle}" Margin="0,8,0,0" />

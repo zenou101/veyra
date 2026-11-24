@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Veyra.UI.Infrastructure;
 
 namespace Veyra.UI.ViewModels;
 
-public sealed record NavigationEntry(string Group, PageViewModel Page)
+public sealed record NavigationEntry(PageViewModel Page)
 {
     public string Title => Page.Title;
     public string Glyph => Page.Glyph;
@@ -20,41 +22,49 @@ public sealed class ShellViewModel : ObservableObject
 
     public ShellViewModel()
     {
-        Overview = new OverviewViewModel();
-        Displays = new DisplaysViewModel();
-        Colours = new ColoursViewModel();
+        Display = new DisplayViewModel();
+        Library = new LibraryViewModel();
+        Resolution = new ResolutionViewModel();
+        Monitor = new MonitorViewModel();
+        Customize = new CustomizeViewModel();
         Crosshair = new CrosshairViewModel();
-        Performance = new PerformanceViewModel();
-        Hotkeys = new HotkeysViewModel();
-        Settings = new SettingsViewModel();
+        Profiles = new ProfilesViewModel();
+        Boost = new BoostViewModel();
+        More = new MoreViewModel();
 
-        NavigationEntries = new[]
+        MoreEntry = new NavigationEntry(More);
+        MainNavigation = new[]
         {
-            new NavigationEntry("WORKSPACE", Overview),
-            new NavigationEntry("WORKSPACE", Displays),
-            new NavigationEntry("WORKSPACE", Colours),
-            new NavigationEntry("TOOLS", Crosshair),
-            new NavigationEntry("TOOLS", Hotkeys),
-            new NavigationEntry("SYSTEM", Settings)
+            new NavigationEntry(Display),
+            new NavigationEntry(Library),
+            new NavigationEntry(Resolution),
+            new NavigationEntry(Monitor),
+            new NavigationEntry(Customize),
+            new NavigationEntry(Crosshair),
+            new NavigationEntry(Profiles),
+            new NavigationEntry(Boost)
         };
+        NavigationEntries = new List<NavigationEntry>(MainNavigation) { MoreEntry };
 
-        NavigationView = CollectionViewSource.GetDefaultView(NavigationEntries);
-        NavigationView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(NavigationEntry.Group)));
+        _currentPage = Display;
+        _selectedNavigationEntry = MainNavigation[0];
 
-        _currentPage = Overview;
-        _selectedNavigationEntry = NavigationEntries[0];
+        AppearanceService.Changed += OnAppearanceChanged;
     }
 
-    public OverviewViewModel Overview { get; }
-    public DisplaysViewModel Displays { get; }
-    public ColoursViewModel Colours { get; }
+    public DisplayViewModel Display { get; }
+    public LibraryViewModel Library { get; }
+    public ResolutionViewModel Resolution { get; }
+    public MonitorViewModel Monitor { get; }
+    public CustomizeViewModel Customize { get; }
     public CrosshairViewModel Crosshair { get; }
-    public PerformanceViewModel Performance { get; }
-    public HotkeysViewModel Hotkeys { get; }
-    public SettingsViewModel Settings { get; }
+    public ProfilesViewModel Profiles { get; }
+    public BoostViewModel Boost { get; }
+    public MoreViewModel More { get; }
 
+    public IReadOnlyList<NavigationEntry> MainNavigation { get; }
     public IReadOnlyList<NavigationEntry> NavigationEntries { get; }
-    public ICollectionView NavigationView { get; }
+    public NavigationEntry MoreEntry { get; }
 
     public NavigationEntry? SelectedNavigationEntry
     {
@@ -84,18 +94,64 @@ public sealed class ShellViewModel : ObservableObject
                 }
             }
 
+            OnPropertyChanged(nameof(IsMoreSelected));
             _ = value.LoadAsync();
             Status = value.Title + " · " + AppServices.StartupStatus;
         }
+    }
+
+    public bool IsMoreSelected => ReferenceEquals(CurrentPage, More);
+
+    public void SelectMore()
+    {
+        SelectedNavigationEntry = MoreEntry;
     }
 
     public string Status { get => _status; set => Set(ref _status, value); }
     public string Version => Veyra.Core.AppInfo.Version;
     public string Title => "Veyra";
 
+    public double ZoomScale => AppServices.Settings.UiScale;
+
+    public bool ShowSoftBackdrop => string.Equals(AppServices.Settings.Backdrop, "Soft", StringComparison.OrdinalIgnoreCase);
+    public bool ShowPetalBackdrop => string.Equals(AppServices.Settings.Backdrop, "Petals", StringComparison.OrdinalIgnoreCase);
+
+    public ImageSource? BackgroundImage
+    {
+        get
+        {
+            var path = AppServices.Settings.BackgroundImagePath;
+            if (string.IsNullOrWhiteSpace(path) || !System.IO.File.Exists(path)) return null;
+
+            try
+            {
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = new Uri(path, UriKind.Absolute);
+                image.EndInit();
+                image.Freeze();
+                return image;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+    }
+
+    private void OnAppearanceChanged()
+    {
+        OnPropertyChanged(nameof(ZoomScale));
+        OnPropertyChanged(nameof(ShowSoftBackdrop));
+        OnPropertyChanged(nameof(ShowPetalBackdrop));
+        OnPropertyChanged(nameof(BackgroundImage));
+    }
+
     public async Task InitializeAsync()
     {
         Status = AppServices.StartupStatus;
-        await Overview.LoadAsync();
+        AppearanceService.Apply();
+        await Display.LoadAsync();
     }
 }
