@@ -3,6 +3,16 @@ name: release
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag
+        required: true
+        default: v1.0.0
+      version:
+        description: Version used in asset names
+        required: true
+        default: 1.0.0
 
 permissions:
   contents: write
@@ -17,16 +27,32 @@ jobs:
           dotnet-version: "10.0.x"
       - name: Test
         run: dotnet test Veyra.slnx -c Release
+      - name: Install WiX
+        shell: pwsh
+        run: |
+          dotnet tool update --global wix --version 6.0.1
+          if ($LASTEXITCODE -ne 0) { dotnet tool install --global wix --version 6.0.1 }
       - name: Package
         shell: pwsh
         run: |
-          $version = $env:GITHUB_REF_NAME.TrimStart("v")
+          $version = "${{ inputs.version }}"
+          if (-not $version) { $version = $env:GITHUB_REF_NAME.TrimStart("v") }
           ./scripts/package.ps1 -Version $version
+          ./scripts/harvest-wix.ps1
+          $wix = Join-Path $env:USERPROFILE ".dotnet\tools\wix.exe"
+          if (-not (Test-Path $wix)) { $wix = "wix" }
+          & $wix build -arch x64 -o "dist/Veyra-Setup-$version-x64.msi" `
+            packaging/wix/Product.wxs packaging/wix/Components.wxs
+          if ($LASTEXITCODE -ne 0) { throw "Installer build failed." }
+          Remove-Item dist/*.wixpdb -Force -ErrorAction SilentlyContinue
+          ./scripts/checksums.ps1
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          name: Veyra ${{ github.ref_name }}
+          name: Veyra ${{ inputs.tag || github.ref_name }}
+          tag_name: ${{ inputs.tag || github.ref_name }}
           files: dist/*
           fail_on_unmatched_files: true
+          overwrite_files: true
           draft: false
           body_path: RELEASE_NOTES.md

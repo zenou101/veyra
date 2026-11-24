@@ -20,6 +20,13 @@ into games or touch anti-cheat systems.
 
 </div>
 
+## Download
+
+[Portable ZIP](https://github.com/zenou101/veyra/releases/download/v1.0.0/Veyra-Portable-1.0.0-x64.zip) · [Installer MSI](https://github.com/zenou101/veyra/releases/download/v1.0.0/Veyra-Setup-1.0.0-x64.msi)
+
+Both builds are self-contained Windows x64. The installer is per-user and needs no administrator
+rights. Release binaries are unsigned and are published on GitHub Releases, not in the source tree.
+
 | Display | Library |
 | :---: | :---: |
 | ![Veyra Display](docs/screenshots/display.png) | ![Veyra Library](docs/screenshots/library.png) |
@@ -28,7 +35,7 @@ into games or touch anti-cheat systems.
 
 Veyra is a focused WPF app for Windows 10 x64. It detects the complete display setup,
 applies changes only when the driver accepts them, and keeps an exact snapshot so every
-change can be undone. A compact navigation sidebar keeps the nine pages within reach:
+change can be undone. A compact navigation sidebar keeps the eight pages within reach:
 
 - **Display** — driver saturation and Windows gamma side by side, brightness, contrast,
   temperature, blacks, highlights and red tint in one fine-tuning grid, plus scene presets.
@@ -42,8 +49,6 @@ change can be undone. A compact navigation sidebar keeps the nine pages within r
   backdrop, and a live text-contrast check.
 - **Crosshair** — a click-through layered window drawn by Windows, with no injection or hooks.
 - **Profiles** — named game profiles that store a look and apply it on request.
-- **Dark Boost & Zoom** — deepen shadows without flattening highlights, and scale Veyra's
-  interface from 80 % to 125 %.
 - **More** — startup and close behaviour, global hotkeys, provider status, licence and data
   location.
 
@@ -74,7 +79,7 @@ rollback if the app stops responding.
 | --- | --- |
 | Debug and Release builds (win-x64) | pass |
 | Unit tests (Core, Storage, Display, Games) | **57 passed, 0 failed** |
-| App launch, navigation and all nine pages | verified; screenshots above |
+| App launch, navigation and all eight pages | verified; screenshots above |
 | Windows gamma ramp write/read | accepted; ramp readback changed and restored |
 | AMD ADL2 saturation write/read | **verified 0–300 %**: 100 → 150 → 100 through the slider, bypass and restore |
 | AMD driver saturation crash recovery | **verified**: 170 % survived a killed process and was restored to 100 % on the next launch |
@@ -140,8 +145,8 @@ More detail: [ARCHITECTURE.md](ARCHITECTURE.md), [BUILDING.md](BUILDING.md),
 
 ## Known limitations
 
-- This source tree is **unsigned**; no installer or release binary is included in the repository.
-  SmartScreen will warn about locally built binaries.
+- Release binaries are **unsigned**; Windows SmartScreen will warn about them.
+  The source tree contains no release binary.
 - **NVIDIA** support is implemented but was not tested on NVIDIA hardware. **Intel** saturation is
   not implemented; Intel users get the Windows ramp controls only.
 - HDR capability is read and displayed, but HDR switching is not offered.

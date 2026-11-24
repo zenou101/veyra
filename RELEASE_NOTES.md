@@ -7,8 +7,8 @@ game performs, and it does not inject into games or touch anti-cheat systems.
 
 ## Highlights
 
-- A compact navigation sidebar for nine pages: Display, Library, Resolution, Monitor,
-  Customize, Crosshair, Profiles, Dark Boost & Zoom, and More.
+- A compact navigation sidebar for eight pages: Display, Library, Resolution, Monitor,
+  Customize, Crosshair, Profiles, and More.
 - The original Veyra identity is intact: dark navy surfaces, cyan accents, glass cards,
   gradient titles, original buttons, sliders and toggles, hover motion, glows and rounded
   corners.
@@ -20,14 +20,23 @@ game performs, and it does not inject into games or touch anti-cheat systems.
   supports them, with one-click restore.
 - Customize offers Default and Slate panels, panel opacity, a background picture, a soft or
   petal backdrop, and a live text-contrast check.
-- Interface zoom from 80 % to 125 %, without clipping the page.
+
+## Fixed
+
+- Customize panel opacity and mode changes now update every card.
+- Resolution keeps the selected display and refreshes its current mode after applying a change.
+- Crisper UI text and lower rendering overhead from removing card-wide effects and blurred
+  background surfaces.
+- Driver badges and other dynamic labels no longer collide with adjacent text.
 
 ## Download
 
+- **`Veyra-Setup-1.0.0-x64.msi`** — per-user installer. Installs into `%LOCALAPPDATA%\Veyra`
+  with a Start-menu shortcut, without an administrator prompt.
 - **`Veyra-Portable-1.0.0-x64.zip`** — self-contained Windows x64 build. Extract it and run
   `Veyra.exe`; no installer or administrator rights are required.
 - **`SHA256SUMS.txt`** — checksums for the release assets. Verify with
-  `Get-FileHash .\Veyra-Portable-1.0.0-x64.zip -Algorithm SHA256` on Windows.
+  `Get-FileHash .\Veyra-Setup-1.0.0-x64.msi -Algorithm SHA256` or the same command for the ZIP.
 
 ## Requirements
 
@@ -39,7 +48,7 @@ The binaries are unsigned, so Windows SmartScreen may warn on first launch.
 ## Verification
 
 - 57 unit tests pass across Core, Storage, Display and Games.
-- All nine pages were launched and captured in the final UI.
+- All eight pages were launched and captured in the final UI.
 - Verified on an AMD Radeon RX 7800 XT, Ryzen 7 5700X, 16 GB RAM, Windows 10 22H2 x64.
 
 ## Known limitations

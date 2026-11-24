@@ -3,7 +3,7 @@ $root = Split-Path -Parent $PSScriptRoot
 $dist = Join-Path $root "dist"
 
 $lines = Get-ChildItem $dist -File |
-    Where-Object { $_.Name -ne "SHA256SUMS.txt" } |
+    Where-Object { $_.Name -ne "SHA256SUMS.txt" -and $_.Extension -ne ".wixpdb" } |
     Sort-Object Name |
     ForEach-Object { (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + "  " + $_.Name }
 
