@@ -16,13 +16,13 @@ into games or touch anti-cheat systems.
 ![Platform: Windows 10 x64](https://img.shields.io/badge/platform-Windows%2010%20x64-0078D4)
 ![.NET 10](https://img.shields.io/badge/.NET-10-512BD4)
 
-[Overview](#overview) · [Colour support](#colour-support) · [Build and run](#build-and-run) · [Limitations](#known-limitations)
+[Website](https://zenou101.github.io/veyra/) · [Overview](#overview) · [Colour support](#colour-support) · [Build and run](#build-and-run) · [Limitations](#known-limitations)
 
 </div>
 
 ## Download
 
-[Portable ZIP](https://github.com/zenou101/veyra/releases/download/v1.0.0/Veyra-Portable-1.0.0-x64.zip) · [Installer MSI](https://github.com/zenou101/veyra/releases/download/v1.0.0/Veyra-Setup-1.0.0-x64.msi)
+[**Veyra website**](https://zenou101.github.io/veyra/) · [Portable ZIP](https://github.com/zenou101/veyra/releases/download/v1.0.0/Veyra-Portable-1.0.0-x64.zip) · [Installer MSI](https://github.com/zenou101/veyra/releases/download/v1.0.0/Veyra-Setup-1.0.0-x64.msi)
 
 Both builds are self-contained Windows x64. The installer is per-user and needs no administrator
 rights. Release binaries are unsigned and are published on GitHub Releases, not in the source tree.

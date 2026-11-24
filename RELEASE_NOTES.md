@@ -38,6 +38,8 @@ game performs, and it does not inject into games or touch anti-cheat systems.
 - **`SHA256SUMS.txt`** — checksums for the release assets. Verify with
   `Get-FileHash .\Veyra-Setup-1.0.0-x64.msi -Algorithm SHA256` or the same command for the ZIP.
 
+More at [zenou101.github.io/veyra](https://zenou101.github.io/veyra/).
+
 ## Requirements
 
 - Windows 10 22H2 or later, x64.
