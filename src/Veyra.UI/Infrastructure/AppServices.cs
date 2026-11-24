@@ -10,7 +10,6 @@ using Veyra.Display.Monitors;
 using Veyra.Overlay;
 using Veyra.Storage.Database;
 using Veyra.Storage.Repositories;
-using Veyra.Telemetry.Sampling;
 
 namespace Veyra.UI.Infrastructure;
 
@@ -24,7 +23,6 @@ public static class AppServices
     public static HotkeyRepository Hotkeys { get; private set; } = null!;
     public static DisplayService Displays { get; } = new();
     public static ColourEngine Colour { get; private set; } = null!;
-    public static TelemetryService Telemetry { get; private set; } = null!;
     public static OverlayService Overlay { get; private set; } = null!;
 
     public static AppSettings Settings { get; private set; } = new();
@@ -42,7 +40,6 @@ public static class AppServices
         Hotkeys = new HotkeyRepository();
         Colour = new ColourEngine(new ColourRecoveryStore());
         await Colour.InitializeAsync(cancellationToken);
-        Telemetry = new TelemetryService();
         Overlay = new OverlayService();
 
         Settings = SettingsStore.Load();

@@ -49,6 +49,8 @@ public sealed class ResolutionViewModel : PageViewModel
     private ResolutionOption? _selectedResolution;
     private int _selectedRefresh;
     private string _status = "Every change shows a 15-second confirmation and rolls back by itself.";
+    private int _loadGeneration;
+    private bool _changingDisplay;
 
     public override string Title => "Resolution";
     public override string Subtitle => "Change resolution and refresh rate without leaving Veyra.";
@@ -64,7 +66,7 @@ public sealed class ResolutionViewModel : PageViewModel
         set
         {
             if (!Set(ref _selectedDisplay, value) || value is null) return;
-            _ = LoadModesAsync();
+            if (!_changingDisplay) _ = LoadModesAsync();
         }
     }
 
@@ -102,38 +104,78 @@ public sealed class ResolutionViewModel : PageViewModel
 
     public override async Task LoadAsync()
     {
+        var generation = ++_loadGeneration;
+        var previousId = _selectedDisplay?.Id;
         IsBusy = true;
         try
         {
             var displays = await AppServices.Displays.GetDisplaysAsync(default);
+            if (generation != _loadGeneration) return;
+
             Displays.Clear();
             foreach (var display in displays) Displays.Add(display);
-            SelectedDisplay = displays.FirstOrDefault(d => d.IsPrimary) ?? displays.FirstOrDefault();
-            if (SelectedDisplay is null) Status = "No connected display was detected.";
+
+            // Keep the display the user was working on; only fall back to primary when it
+            // disappeared. Reloading must not silently jump back to the primary monitor.
+            var target = displays.FirstOrDefault(d => string.Equals(d.Id, previousId, StringComparison.Ordinal))
+                         ?? displays.FirstOrDefault(d => d.IsPrimary)
+                         ?? displays.FirstOrDefault();
+
+            _changingDisplay = true;
+            _selectedDisplay = target;
+            OnPropertyChanged(nameof(SelectedDisplay));
+            _changingDisplay = false;
+
+            NotifyCurrentState();
+            if (target is null)
+            {
+                _modes.Clear();
+                Resolutions.Clear();
+                RefreshRates.Clear();
+                SelectedResolution = null;
+                SelectedRefresh = 0;
+                OnPropertyChanged(nameof(ModeCount));
+                Status = "No connected display was detected.";
+                return;
+            }
+
+            await LoadModesCoreAsync(generation);
         }
         catch (Exception ex)
         {
-            Status = "Display enumeration failed: " + ex.Message;
+            if (generation == _loadGeneration) Status = "Display enumeration failed: " + ex.Message;
         }
         finally
         {
-            IsBusy = false;
+            if (generation == _loadGeneration) IsBusy = false;
         }
     }
 
     private async Task LoadModesAsync()
     {
-        if (SelectedDisplay is null) return;
-
-        OnPropertyChanged(nameof(CurrentResolution));
-        OnPropertyChanged(nameof(CurrentRefresh));
-        OnPropertyChanged(nameof(CurrentDetail));
-        OnPropertyChanged(nameof(AspectLabel));
-
+        var generation = ++_loadGeneration;
         IsBusy = true;
         try
         {
-            var modes = await AppServices.Displays.GetModesAsync(SelectedDisplay.Id, default);
+            await LoadModesCoreAsync(generation);
+        }
+        finally
+        {
+            if (generation == _loadGeneration) IsBusy = false;
+        }
+    }
+
+    private async Task LoadModesCoreAsync(int generation)
+    {
+        var display = SelectedDisplay;
+        if (display is null) return;
+
+        NotifyCurrentState();
+        try
+        {
+            var modes = await AppServices.Displays.GetModesAsync(display.Id, default);
+            if (generation != _loadGeneration || SelectedDisplay?.Id != display.Id) return;
+
             _modes.Clear();
             _modes.AddRange(modes.OrderByDescending(m => m.Width * m.Height).ThenByDescending(m => m.RefreshRate));
 
@@ -142,7 +184,7 @@ public sealed class ResolutionViewModel : PageViewModel
                          .OrderByDescending(g => g.Key.Width * g.Key.Height))
             {
                 Resolutions.Add(new ResolutionOption(group.Key.Width, group.Key.Height,
-                    group.Key.Width == SelectedDisplay.Width && group.Key.Height == SelectedDisplay.Height));
+                    group.Key.Width == display.Width && group.Key.Height == display.Height));
             }
 
             var current = Resolutions.FirstOrDefault(r => r.IsCurrent) ?? Resolutions.FirstOrDefault();
@@ -154,12 +196,18 @@ public sealed class ResolutionViewModel : PageViewModel
         }
         catch (Exception ex)
         {
-            Status = "Mode enumeration failed: " + ex.Message;
+            if (generation == _loadGeneration) Status = "Mode enumeration failed: " + ex.Message;
         }
-        finally
-        {
-            IsBusy = false;
-        }
+    }
+
+    private void NotifyCurrentState()
+    {
+        OnPropertyChanged(nameof(CurrentResolution));
+        OnPropertyChanged(nameof(CurrentRefresh));
+        OnPropertyChanged(nameof(CurrentDetail));
+        OnPropertyChanged(nameof(AspectLabel));
+        OnPropertyChanged(nameof(Megapixels));
+        OnPropertyChanged(nameof(SelectionLabel));
     }
 
     private void RebuildRefreshRates()

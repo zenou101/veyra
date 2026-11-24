@@ -39,15 +39,19 @@
                                         <StackPanel>
                                             <Border Height="72" CornerRadius="3" Background="{Binding Preview}" />
                                             <Grid Margin="0,8,0,0">
-                                                <StackPanel>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Margin="0,0,6,0">
                                                     <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="SemiBold"
                                                                TextTrimming="CharacterEllipsis" />
                                                     <TextBlock Text="{Binding Badge}" FontSize="7.5" FontWeight="Bold"
                                                                Foreground="{StaticResource TextFaintBrush}" Margin="0,2,0,0" />
                                                 </StackPanel>
-                                                <Button Content="&#xE74D;" FontFamily="{StaticResource IconFont}"
+                                                <Button Grid.Column="1" Content="&#xE74D;" FontFamily="{StaticResource IconFont}"
                                                         Style="{StaticResource SubtleButton}" FontSize="10"
-                                                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                        VerticalAlignment="Top"
                                                         Padding="6,3" ToolTip="Delete this look"
                                                         Visibility="{Binding CanDelete, Converter={StaticResource BoolToVis}}"
                                                         Click="Delete_Click" />

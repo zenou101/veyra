@@ -28,15 +28,21 @@
             <!-- Display picker -->
             <Border Style="{StaticResource Panel}" Padding="20,12" Margin="0,10,0,0">
                 <Grid>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0">
                         <TextBlock Text="&#xE7F4;" FontFamily="{StaticResource IconFont}" FontSize="14"
                                    Foreground="{StaticResource TextFaintBrush}" VerticalAlignment="Center" />
                         <StackPanel Margin="10,0,0,0">
-                            <TextBlock Text="{Binding DisplayName}" FontSize="12.5" FontWeight="SemiBold" />
-                            <TextBlock Text="{Binding DisplayMeta}" Style="{StaticResource Tiny}" Margin="0,2,0,0" />
+                            <TextBlock Text="{Binding DisplayName}" FontSize="12.5" FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{Binding DisplayMeta}" Style="{StaticResource Tiny}" Margin="0,2,0,0"
+                                       TextTrimming="CharacterEllipsis" />
                         </StackPanel>
                     </StackPanel>
-                    <ListBox ItemsSource="{Binding Displays}" SelectedItem="{Binding SelectedDisplay}"
+                    <ListBox Grid.Column="1" ItemsSource="{Binding Displays}" SelectedItem="{Binding SelectedDisplay}"
                              HorizontalAlignment="Right" VerticalAlignment="Center">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
@@ -74,18 +80,20 @@
 
                             <StackPanel>
                                 <Grid>
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Saturation" Style="{StaticResource SectionTitle}" />
-                                            <Border Background="{StaticResource AccentSoftBrush}" BorderBrush="#1B5C73" BorderThickness="1"
-                                                    CornerRadius="6" Padding="6,2" Margin="8,0,0,0">
-                                                <TextBlock Text="{Binding SaturationProviderLabel}" FontSize="8" FontWeight="Bold"
-                                                           Foreground="{StaticResource AccentBrightBrush}" />
-                                            </Border>
-                                        </StackPanel>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Saturation" Style="{StaticResource SectionTitle}" />
+                                        <Border Background="{StaticResource AccentSoftBrush}" BorderBrush="#1B5C73" BorderThickness="1"
+                                                CornerRadius="6" Padding="6,2" Margin="8,0,0,0">
+                                            <TextBlock Text="{Binding SaturationProviderLabel}" FontSize="8" FontWeight="Bold"
+                                                       Foreground="{StaticResource AccentBrightBrush}" />
+                                        </Border>
                                     </StackPanel>
-                                    <TextBlock Text="100 is the game as it ships" Style="{StaticResource Tiny}"
-                                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="1" Text="100 is the game as it ships" Style="{StaticResource Tiny}"
+                                               Margin="0,5,0,0" />
                                 </Grid>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
@@ -112,9 +120,13 @@
 
                             <StackPanel Grid.Column="2">
                                 <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
                                     <TextBlock Text="Gamma" Style="{StaticResource SectionTitle}" />
-                                    <TextBlock Text="1.00 is neutral" Style="{StaticResource Tiny}"
-                                               HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Row="1" Text="1.00 is neutral" Style="{StaticResource Tiny}"
+                                               Margin="0,5,0,0" />
                                 </Grid>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
@@ -218,10 +230,14 @@
                                         <StackPanel>
                                             <Border Height="58" CornerRadius="3" Background="{Binding Preview}" />
                                             <Grid Margin="0,7,0,0">
-                                                <TextBlock Text="{Binding Name}" FontSize="11" FontWeight="SemiBold"
-                                                           TextTrimming="CharacterEllipsis" />
-                                                <Border HorizontalAlignment="Right" Background="{StaticResource AccentSoftBrush}" CornerRadius="4"
-                                                        Padding="4,1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="11" FontWeight="SemiBold"
+                                                           TextTrimming="CharacterEllipsis" Margin="0,0,4,0" />
+                                                <Border Grid.Column="1" Background="{StaticResource AccentSoftBrush}" CornerRadius="4"
+                                                        Padding="4,1" VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding Badge}" FontSize="7" FontWeight="Bold"
                                                                Foreground="{StaticResource TextFaintBrush}" />
                                                 </Border>

@@ -31,13 +31,18 @@
                     <Border Style="{StaticResource Panel}" Padding="24,20">
                         <StackPanel>
                             <Grid>
-                                <StackPanel>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,12,0">
                                     <TextBlock Text="Test Monitor" Style="{StaticResource PanelTitle}" />
-                                    <TextBlock Text="{Binding MonitorDetail}" Style="{StaticResource Tiny}" Margin="0,4,0,0" />
+                                    <TextBlock Text="{Binding MonitorDetail}" Style="{StaticResource Tiny}" Margin="0,4,0,0"
+                                               TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
-                                <TextBlock Text="{Binding SelectedDisplay.FriendlyName}" FontSize="11.5"
-                                           Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right"
-                                           VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{Binding SelectedDisplay.FriendlyName}" FontSize="11.5"
+                                           Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"
+                                           MaxWidth="220" TextTrimming="CharacterEllipsis" />
                             </Grid>
 
                             <Border Height="1" Background="{StaticResource BorderBrush}" Margin="0,14" />

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using Veyra.Core.Models;
 using Color = System.Windows.Media.Color;
+using Point = System.Windows.Point;
 
 namespace Veyra.UI.Infrastructure;
 
@@ -26,22 +27,21 @@ public static class AppearanceService
             ? new[] { Color.FromRgb(10, 28, 37), Color.FromRgb(7, 19, 26), Color.FromRgb(5, 13, 18) }
             : new[] { Color.FromRgb(12, 28, 37), Color.FromRgb(8, 20, 27), Color.FromRgb(6, 16, 22) };
 
-        if (Application.Current.Resources["CardGradientBrush"] is LinearGradientBrush card)
+        // Theme brushes are frozen by WPF, so mutating the shared instance silently does
+        // nothing. Replace the resource instead; every Card uses DynamicResource and updates.
+        var card = new LinearGradientBrush
         {
-            if (!card.IsFrozen)
-            {
-                for (var i = 0; i < card.GradientStops.Count && i < stops.Length; i++)
-                {
-                    var stop = card.GradientStops[i];
-                    stop.Color = Color.FromArgb((byte)Math.Round(opacity * 255), stops[i].R, stops[i].G, stops[i].B);
-                }
-            }
-        }
-
-        if (Application.Current.Resources["PanelBrush"] is SolidColorBrush panel && !panel.IsFrozen)
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1)
+        };
+        var alpha = (byte)Math.Round(opacity * 255);
+        for (var i = 0; i < stops.Length; i++)
         {
-            panel.Color = Color.FromArgb((byte)Math.Round(opacity * 255), stops[1].R, stops[1].G, stops[1].B);
+            card.GradientStops.Add(new GradientStop(
+                Color.FromArgb(alpha, stops[i].R, stops[i].G, stops[i].B), i / (double)(stops.Length - 1)));
         }
+        card.Freeze();
+        Application.Current.Resources["CardGradientBrush"] = card;
 
         Changed?.Invoke();
     }

@@ -3,7 +3,7 @@
 
     <FontFamily x:Key="IconFont">Segoe MDL2 Assets</FontFamily>
 
-    <!-- Cards and panels reuse the original Card component: same gradient, radius, shadow and hover glow. -->
+    <!-- Cards and panels reuse the original Card component: same gradient, radius and hover border. -->
     <Style x:Key="Panel" TargetType="Border" BasedOn="{StaticResource Card}">
         <Setter Property="Padding" Value="22" />
     </Style>
@@ -34,7 +34,6 @@
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource CardHoverGradientBrush}" />
                 <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
-                <Setter Property="Effect" Value="{StaticResource CardHoverEffect}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -118,7 +117,6 @@
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="Root" Property="Background" Value="{StaticResource AccentSoftBrush}" />
                             <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource AccentBrush}" />
-                            <Setter TargetName="Root" Property="Effect" Value="{StaticResource SoftGlowEffect}" />
                             <Setter Property="Foreground" Value="{StaticResource AccentBrightBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>

@@ -22,7 +22,6 @@ public static class SettingsValidator
             Accent = string.IsNullOrWhiteSpace(settings.Accent) ? "Violet" : settings.Accent,
             LastPage = string.IsNullOrWhiteSpace(settings.LastPage) ? "Display" : settings.LastPage,
             PanelOpacity = Math.Clamp(double.IsFinite(settings.PanelOpacity) ? settings.PanelOpacity : 0.92, 0.55, 1.0),
-            UiScale = Math.Clamp(double.IsFinite(settings.UiScale) ? settings.UiScale : 1.0, 0.8, 1.25),
             AppearanceMode = settings.AppearanceMode is "Slate" ? "Slate" : "Default",
             Backdrop = settings.Backdrop is "Soft" or "Petals" ? settings.Backdrop : "Off",
             SettingsSchemaVersion = "1"

@@ -21,7 +21,6 @@
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource AccentBrush}" />
                                 <Setter TargetName="Root" Property="Background" Value="{StaticResource AccentSoftBrush}" />
-                                <Setter TargetName="Root" Property="Effect" Value="{StaticResource SoftGlowEffect}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

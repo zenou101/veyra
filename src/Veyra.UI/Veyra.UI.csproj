@@ -24,7 +24,6 @@
     <ProjectReference Include="..\Veyra.Display\Veyra.Display.csproj" />
     <ProjectReference Include="..\Veyra.Colour\Veyra.Colour.csproj" />
     <ProjectReference Include="..\Veyra.Games\Veyra.Games.csproj" />
-    <ProjectReference Include="..\Veyra.Telemetry\Veyra.Telemetry.csproj" />
     <ProjectReference Include="..\Veyra.Overlay\Veyra.Overlay.csproj" />
     <ProjectReference Include="..\Veyra.DisplayGuard\Veyra.DisplayGuard.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>

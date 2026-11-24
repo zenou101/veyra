@@ -84,8 +84,8 @@ public sealed class CustomizeViewModel : PageViewModel
     {
         get
         {
-            var panel = IsSlate ? Color.FromRgb(47, 47, 47) : Color.FromRgb(59, 59, 59);
-            var text = Color.FromRgb(246, 244, 238);
+            var panel = IsSlate ? Color.FromRgb(7, 19, 26) : Color.FromRgb(8, 20, 27);
+            var text = Color.FromRgb(242, 251, 255);
             static double Channel(byte value)
             {
                 var v = value / 255.0;

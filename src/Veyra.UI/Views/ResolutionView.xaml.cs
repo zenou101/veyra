@@ -44,13 +44,22 @@ public partial class ResolutionView : UserControl
             return;
         }
 
-        var dialog = new DisplayChangeDialog(vm.SelectedDisplay, mode)
+        try
         {
-            Owner = Window.GetWindow(this)
-        };
-        dialog.ShowDialog();
+            var dialog = new DisplayChangeDialog(vm.SelectedDisplay, mode)
+            {
+                Owner = Window.GetWindow(this)
+            };
+            dialog.ShowDialog();
 
-        vm.ReportStatus(dialog.ResultMessage);
-        await vm.LoadAsync();
+            // Reload the same display (not the primary) so the applied mode and its current
+            // refresh rate are reflected in the page after the confirmation dialog closes.
+            await vm.LoadAsync();
+            vm.ReportStatus(dialog.ResultMessage);
+        }
+        catch (Exception ex)
+        {
+            vm.ReportStatus("The display change could not be completed: " + ex.Message);
+        }
     }
 }

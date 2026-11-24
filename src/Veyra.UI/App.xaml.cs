@@ -57,7 +57,6 @@ public partial class App : Application
         }
 
         AppServices.Overlay.Dispose();
-        AppServices.Telemetry.Dispose();
         AppServices.Colour.Dispose();
         base.OnExit(e);
     }

@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using Veyra.Core.Models;
@@ -17,9 +18,7 @@ public partial class MainWindow : Window
     private HotkeyService? _hotkeys;
     private NotifyIcon? _tray;
     private bool _exiting;
-    private double _baseWidth;
-    private double _baseHeight;
-    private double _appliedZoom;
+    private int _pageAnimation;
 
     public MainWindow()
     {
@@ -29,11 +28,8 @@ public partial class MainWindow : Window
         DataContext = _shell;
         _shell.PropertyChanged += OnShellPropertyChanged;
 
-        _baseWidth = AppServices.Settings.WindowWidth;
-        _baseHeight = AppServices.Settings.WindowHeight;
-        _appliedZoom = Math.Clamp(_shell.ZoomScale, 0.8, 1.25);
-        Width = _baseWidth * _appliedZoom;
-        Height = _baseHeight * _appliedZoom;
+        Width = AppServices.Settings.WindowWidth;
+        Height = AppServices.Settings.WindowHeight;
         if (!double.IsNaN(AppServices.Settings.WindowLeft)) Left = AppServices.Settings.WindowLeft;
         if (!double.IsNaN(AppServices.Settings.WindowTop)) Top = AppServices.Settings.WindowTop;
         if (AppServices.Settings.WindowMaximized) WindowState = WindowState.Maximized;
@@ -63,46 +59,31 @@ public partial class MainWindow : Window
         {
             AnimatePage();
         }
-
-        if (e.PropertyName == nameof(ShellViewModel.ZoomScale))
-        {
-            ApplyZoom();
-        }
-    }
-
-    /// <summary>
-    /// Interface zoom scales the content layout, so the window grows with it. Window bounds are
-    /// saved normalised to 100% and restored at the current zoom, which keeps the saved size stable.
-    /// </summary>
-    private void ApplyZoom()
-    {
-        var scale = Math.Clamp(_shell.ZoomScale, 0.8, 1.25);
-        if (Math.Abs(scale - _appliedZoom) < 0.001) return;
-
-        _baseWidth = Width / _appliedZoom;
-        _baseHeight = Height / _appliedZoom;
-
-        var work = SystemParameters.WorkArea;
-        var targetWidth = Math.Max(MinWidth, Math.Min(_baseWidth * scale, work.Width));
-        var targetHeight = Math.Max(MinHeight, Math.Min(_baseHeight * scale, work.Height));
-        var previousWidth = Width;
-        var previousHeight = Height;
-
-        Width = targetWidth;
-        Height = targetHeight;
-        Left = Math.Max(work.Left, Math.Min(Left + (previousWidth - targetWidth) / 2, work.Right - targetWidth));
-        Top = Math.Max(work.Top, Math.Min(Top + (previousHeight - targetHeight) / 2, work.Bottom - targetHeight));
-        _appliedZoom = scale;
     }
 
     private void AnimatePage()
     {
+        var generation = ++_pageAnimation;
         var ease = new CubicEase { EasingMode = EasingMode.EaseOut };
-        PageHost.BeginAnimation(OpacityProperty,
-            new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(240)) { EasingFunction = ease });
-        PageMove.BeginAnimation(System.Windows.Media.TranslateTransform.XProperty,
+        var move = new TranslateTransform(14, 5);
+        PageHost.RenderTransform = move;
+
+        var fade = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(240)) { EasingFunction = ease };
+        fade.Completed += (_, _) =>
+        {
+            if (generation != _pageAnimation) return;
+
+            // Leaving an opacity clock on the page host keeps its text on an intermediate
+            // surface, which makes ClearType look soft even after the animation finishes.
+            PageHost.BeginAnimation(OpacityProperty, null);
+            PageHost.Opacity = 1;
+            if (ReferenceEquals(PageHost.RenderTransform, move)) PageHost.RenderTransform = null;
+        };
+
+        PageHost.BeginAnimation(OpacityProperty, fade);
+        move.BeginAnimation(TranslateTransform.XProperty,
             new DoubleAnimation(14, 0, TimeSpan.FromMilliseconds(280)) { EasingFunction = ease });
-        PageMove.BeginAnimation(System.Windows.Media.TranslateTransform.YProperty,
+        move.BeginAnimation(TranslateTransform.YProperty,
             new DoubleAnimation(5, 0, TimeSpan.FromMilliseconds(280)) { EasingFunction = ease });
     }
 
@@ -211,8 +192,8 @@ public partial class MainWindow : Window
         var normal = WindowState == WindowState.Normal;
         AppServices.SaveSettings(s => s with
         {
-            WindowWidth = normal ? Width / _appliedZoom : s.WindowWidth,
-            WindowHeight = normal ? Height / _appliedZoom : s.WindowHeight,
+            WindowWidth = normal ? Width : s.WindowWidth,
+            WindowHeight = normal ? Height : s.WindowHeight,
             WindowLeft = Left,
             WindowTop = Top,
             WindowMaximized = WindowState == WindowState.Maximized,

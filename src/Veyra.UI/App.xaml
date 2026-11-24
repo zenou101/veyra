@@ -37,9 +37,6 @@
             <DataTemplate DataType="{x:Type vm:ProfilesViewModel}">
                 <views:ProfilesView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:BoostViewModel}">
-                <views:BoostView />
-            </DataTemplate>
             <DataTemplate DataType="{x:Type vm:MoreViewModel}">
                 <views:MoreView />
             </DataTemplate>

@@ -29,7 +29,6 @@ public sealed class ShellViewModel : ObservableObject
         Customize = new CustomizeViewModel();
         Crosshair = new CrosshairViewModel();
         Profiles = new ProfilesViewModel();
-        Boost = new BoostViewModel();
         More = new MoreViewModel();
 
         MoreEntry = new NavigationEntry(More);
@@ -41,8 +40,7 @@ public sealed class ShellViewModel : ObservableObject
             new NavigationEntry(Monitor),
             new NavigationEntry(Customize),
             new NavigationEntry(Crosshair),
-            new NavigationEntry(Profiles),
-            new NavigationEntry(Boost)
+            new NavigationEntry(Profiles)
         };
         NavigationEntries = new List<NavigationEntry>(MainNavigation) { MoreEntry };
 
@@ -59,7 +57,6 @@ public sealed class ShellViewModel : ObservableObject
     public CustomizeViewModel Customize { get; }
     public CrosshairViewModel Crosshair { get; }
     public ProfilesViewModel Profiles { get; }
-    public BoostViewModel Boost { get; }
     public MoreViewModel More { get; }
 
     public IReadOnlyList<NavigationEntry> MainNavigation { get; }
@@ -111,16 +108,21 @@ public sealed class ShellViewModel : ObservableObject
     public string Version => Veyra.Core.AppInfo.Version;
     public string Title => "Veyra";
 
-    public double ZoomScale => AppServices.Settings.UiScale;
-
     public bool ShowSoftBackdrop => string.Equals(AppServices.Settings.Backdrop, "Soft", StringComparison.OrdinalIgnoreCase);
     public bool ShowPetalBackdrop => string.Equals(AppServices.Settings.Backdrop, "Petals", StringComparison.OrdinalIgnoreCase);
+
+    private string? _backgroundPath;
+    private ImageSource? _backgroundImage;
 
     public ImageSource? BackgroundImage
     {
         get
         {
             var path = AppServices.Settings.BackgroundImagePath;
+            if (string.Equals(path, _backgroundPath, StringComparison.OrdinalIgnoreCase)) return _backgroundImage;
+
+            _backgroundPath = path;
+            _backgroundImage = null;
             if (string.IsNullOrWhiteSpace(path) || !System.IO.File.Exists(path)) return null;
 
             try
@@ -131,18 +133,19 @@ public sealed class ShellViewModel : ObservableObject
                 image.UriSource = new Uri(path, UriKind.Absolute);
                 image.EndInit();
                 image.Freeze();
-                return image;
+                _backgroundImage = image;
             }
             catch (Exception)
             {
-                return null;
+                // A broken image must not stop the shell from loading.
             }
+
+            return _backgroundImage;
         }
     }
 
     private void OnAppearanceChanged()
     {
-        OnPropertyChanged(nameof(ZoomScale));
         OnPropertyChanged(nameof(ShowSoftBackdrop));
         OnPropertyChanged(nameof(ShowPetalBackdrop));
         OnPropertyChanged(nameof(BackgroundImage));

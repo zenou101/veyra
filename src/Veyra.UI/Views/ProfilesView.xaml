@@ -73,13 +73,17 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Grid>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Name}" FontSize="11.5" />
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                                <TextBlock Text="{Binding Name}" FontSize="11.5"
+                                                           TextTrimming="CharacterEllipsis" />
                                                 <TextBlock Text="{Binding Description}" FontSize="9.5" Opacity="0.75"
-                                                           TextTrimming="CharacterEllipsis" MaxWidth="220" />
+                                                           TextTrimming="CharacterEllipsis" />
                                             </StackPanel>
-                                            <Border Width="24" Height="24" CornerRadius="3" Background="{Binding Preview}"
-                                                    HorizontalAlignment="Right" Margin="10,0,0,0" />
+                                            <Border Grid.Column="1" Width="24" Height="24" CornerRadius="3" Background="{Binding Preview}" />
                                         </Grid>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
