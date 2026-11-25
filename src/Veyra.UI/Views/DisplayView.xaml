@@ -65,7 +65,7 @@
             <Grid Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="360" />
+                    <ColumnDefinition Width="346" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel>
@@ -88,7 +88,7 @@
                                         <TextBlock Text="Saturation" Style="{StaticResource SectionTitle}" />
                                         <Border Background="{StaticResource AccentSoftBrush}" BorderBrush="#1B5C73" BorderThickness="1"
                                                 CornerRadius="6" Padding="6,2" Margin="8,0,0,0">
-                                            <TextBlock Text="{Binding SaturationProviderLabel}" FontSize="8" FontWeight="Bold"
+                                            <TextBlock Text="{Binding SaturationProviderLabel}" FontSize="9" FontWeight="Bold"
                                                        Foreground="{StaticResource AccentBrightBrush}" />
                                         </Border>
                                     </StackPanel>
@@ -207,15 +207,19 @@
                     </Border>
                 </StackPanel>
 
-                <!-- Scene presets -->
+                <!-- Saved looks -->
                 <Border Grid.Column="1" Style="{StaticResource Panel}" Padding="20,18" Margin="10,0,0,0"
                         VerticalAlignment="Top">
                     <StackPanel>
                         <Grid>
-                            <TextBlock Text="Scene presets" Style="{StaticResource SectionTitle}" />
+                            <TextBlock Text="Saved looks" Style="{StaticResource SectionTitle}" />
                             <TextBlock Text="Tap a card to apply" Style="{StaticResource Tiny}" HorizontalAlignment="Right"
                                        VerticalAlignment="Center" />
                         </Grid>
+
+                        <TextBlock Text="No saved looks yet. Tune the sliders, then save one."
+                                   Style="{StaticResource Tiny}" TextWrapping="Wrap" Margin="0,14,0,0"
+                                   Visibility="{Binding PresetsEmpty, Converter={StaticResource BoolToVis}}" />
 
                         <ItemsControl ItemsSource="{Binding Presets}" Margin="0,14,0,0">
                             <ItemsControl.ItemsPanel>
@@ -223,26 +227,25 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Style="{StaticResource PresetCardBorder}" Width="140" Margin="0,0,6,8"
+                                    <Border Style="{StaticResource PresetCardBorder}" Width="150" Margin="0,0,6,8"
                                             ToolTip="{Binding Description}"
                                             AutomationProperties.Name="{Binding Name}"
                                             MouseLeftButtonUp="Preset_Click">
                                         <StackPanel>
-                                            <Border Height="58" CornerRadius="3" Background="{Binding Preview}" />
-                                            <Grid Margin="0,7,0,0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="11" FontWeight="SemiBold"
-                                                           TextTrimming="CharacterEllipsis" Margin="0,0,4,0" />
-                                                <Border Grid.Column="1" Background="{StaticResource AccentSoftBrush}" CornerRadius="4"
-                                                        Padding="4,1" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding Badge}" FontSize="7" FontWeight="Bold"
-                                                               Foreground="{StaticResource TextFaintBrush}" />
-                                                </Border>
+                                            <Grid>
+                                                <Border Height="58" CornerRadius="3" Background="{Binding Preview}" />
+                                                <Button Content="&#xE74D;" FontFamily="{StaticResource IconFont}" FontSize="9"
+                                                        Style="{StaticResource SubtleButton}" Width="22" Height="22"
+                                                        Padding="0" Margin="4" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                        Background="#CC08141B" BorderBrush="{StaticResource BorderStrongBrush}"
+                                                        BorderThickness="1" Foreground="#FFB4C3"
+                                                        ToolTip="Delete this look"
+                                                        AutomationProperties.Name="{Binding Name, StringFormat='Delete {0}'}"
+                                                        Click="DeletePreset_Click" />
                                             </Grid>
-                                            <ItemsControl ItemsSource="{Binding Swatches}" Margin="0,6,0,0">
+                                            <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="SemiBold"
+                                                       TextTrimming="CharacterEllipsis" Margin="2,8,2,0" />
+                                            <ItemsControl ItemsSource="{Binding Swatches}" Margin="2,6,0,0">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate><StackPanel Orientation="Horizontal" /></ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>

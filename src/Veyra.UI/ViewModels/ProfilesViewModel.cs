@@ -77,7 +77,7 @@ public sealed class ProfilesViewModel : PageViewModel
                 Presets.Add(new PresetCardViewModel(preset));
             }
 
-            SelectedPreset ??= Presets.FirstOrDefault(p => p.Id == "builtin.balanced") ?? Presets.FirstOrDefault();
+            SelectedPreset ??= Presets.FirstOrDefault();
             await ReloadProfilesAsync();
         }
         catch (Exception ex)

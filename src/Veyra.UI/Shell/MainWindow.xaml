@@ -48,12 +48,12 @@
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <StackPanel Margin="0,8">
+                        <StackPanel Margin="0,10">
                             <TextBlock Text="{Binding Glyph}" FontFamily="Segoe MDL2 Assets" FontSize="18"
                                        HorizontalAlignment="Center"
                                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
-                            <TextBlock Text="{Binding Title}" FontSize="9.5" FontWeight="Bold"
-                                       TextAlignment="Center" TextWrapping="Wrap" Margin="3,5,3,0" LineHeight="12"
+                            <TextBlock Text="{Binding Title}" FontSize="10.5" FontWeight="Bold"
+                                       TextAlignment="Center" TextWrapping="Wrap" Margin="3,6,3,0" LineHeight="13"
                                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
                         </StackPanel>
                     </DataTemplate>
@@ -71,7 +71,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
-                        <Grid x:Name="NavRoot" MinHeight="58">
+                        <Grid x:Name="NavRoot" MinHeight="62">
                             <Border x:Name="Pill" CornerRadius="10" Background="Transparent"
                                     BorderBrush="Transparent" BorderThickness="1" />
                             <Border x:Name="Bar" Width="3" Height="20" CornerRadius="2"
@@ -106,19 +106,19 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Grid x:Name="NavRoot" MinHeight="58" Margin="7,1">
+                        <Grid x:Name="NavRoot" MinHeight="62" Margin="7,1">
                             <Border x:Name="Pill" CornerRadius="10" Background="Transparent"
                                     BorderBrush="Transparent" BorderThickness="1" />
                             <Border x:Name="Bar" Width="3" Height="20" CornerRadius="2"
                                     HorizontalAlignment="Left" Margin="3,0,0,0"
                                     Background="{StaticResource SidebarAccentBrush}" Opacity="0"
                                     Effect="{StaticResource SidebarGlowEffect}" />
-                            <StackPanel Margin="0,8">
+                            <StackPanel Margin="0,10">
                                 <TextBlock Text="&#xE712;" FontFamily="Segoe MDL2 Assets" FontSize="18"
                                            HorizontalAlignment="Center"
                                            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
-                                <TextBlock Text="More" FontSize="9.5" FontWeight="Bold" TextAlignment="Center"
-                                           Margin="3,5,3,0"
+                                <TextBlock Text="More" FontSize="10.5" FontWeight="Bold" TextAlignment="Center"
+                                           Margin="3,6,3,0"
                                            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
                             </StackPanel>
                         </Grid>
@@ -167,7 +167,7 @@
                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
                         <TextBlock Text="Veyra" FontFamily="{StaticResource DisplayFont}" FontSize="16"
                                    FontWeight="Bold" Foreground="{StaticResource SidebarTextBrush}" />
-                        <TextBlock Text="DISPLAY &amp; COLOUR" FontSize="7.5" FontWeight="Bold"
+                        <TextBlock Text="DISPLAY &amp; COLOUR" FontSize="8.5" FontWeight="Bold"
                                    Foreground="{StaticResource SidebarAccentBrush}" Margin="0,1,0,0" />
                     </StackPanel>
                 </StackPanel>
@@ -215,7 +215,7 @@
                     <StackPanel Grid.Row="1" Margin="0,0,0,10">
                         <Button Style="{StaticResource SidebarMoreButton}" Click="More_Click"
                                 AutomationProperties.Name="More" />
-                        <TextBlock Text="{Binding Version}" FontSize="9" HorizontalAlignment="Center"
+                        <TextBlock Text="{Binding Version}" FontSize="10" HorizontalAlignment="Center"
                                    Foreground="{StaticResource SidebarFaintBrush}" Margin="0,6,0,0" />
                     </StackPanel>
                 </Grid>
@@ -255,7 +255,7 @@
                     </Ellipse>
                 </Canvas>
 
-                <ContentControl x:Name="PageHost" Content="{Binding CurrentPage}"
+                <ContentControl x:Name="PageHost" Content="{Binding PageHostContent}"
                                 RenderOptions.ClearTypeHint="Enabled"
                                 TextOptions.TextFormattingMode="Display" />
             </Grid>
@@ -266,15 +266,15 @@
             <Grid Margin="18,0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Ellipse Style="{StaticResource StatusDot}" />
-                    <TextBlock Text="{Binding Status}" VerticalAlignment="Center" FontSize="11"
+                    <TextBlock Text="{Binding Status}" VerticalAlignment="Center" FontSize="11.5"
                                Foreground="{StaticResource TextFaintBrush}" TextTrimming="CharacterEllipsis"
                                Margin="8,0,0,0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <TextBlock Text="GPL-3.0" FontSize="9.5" Foreground="{StaticResource TextFaintBrush}"
+                    <TextBlock Text="GPL-3.0" FontSize="10" Foreground="{StaticResource TextFaintBrush}"
                                Margin="0,0,10,0" />
                     <Border Background="#08212C" CornerRadius="4" Padding="6,1">
-                        <TextBlock Text="{Binding Version}" FontSize="9" FontWeight="SemiBold"
+                        <TextBlock Text="{Binding Version}" FontSize="10" FontWeight="SemiBold"
                                    Foreground="{StaticResource TextMutedBrush}" />
                     </Border>
                 </StackPanel>

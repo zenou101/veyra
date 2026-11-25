@@ -23,7 +23,6 @@ public sealed class ShellViewModel : ObservableObject
     public ShellViewModel()
     {
         Display = new DisplayViewModel();
-        Library = new LibraryViewModel();
         Resolution = new ResolutionViewModel();
         Monitor = new MonitorViewModel();
         Customize = new CustomizeViewModel();
@@ -35,7 +34,6 @@ public sealed class ShellViewModel : ObservableObject
         MainNavigation = new[]
         {
             new NavigationEntry(Display),
-            new NavigationEntry(Library),
             new NavigationEntry(Resolution),
             new NavigationEntry(Monitor),
             new NavigationEntry(Customize),
@@ -51,7 +49,6 @@ public sealed class ShellViewModel : ObservableObject
     }
 
     public DisplayViewModel Display { get; }
-    public LibraryViewModel Library { get; }
     public ResolutionViewModel Resolution { get; }
     public MonitorViewModel Monitor { get; }
     public CustomizeViewModel Customize { get; }
@@ -79,6 +76,7 @@ public sealed class ShellViewModel : ObservableObject
         private set
         {
             if (!Set(ref _currentPage, value) || value is null) return;
+            OnPropertyChanged(nameof(PageHostContent));
 
             if (!ReferenceEquals(_selectedNavigationEntry?.Page, value))
             {
@@ -99,6 +97,27 @@ public sealed class ShellViewModel : ObservableObject
 
     public bool IsMoreSelected => ReferenceEquals(CurrentPage, More);
 
+    /// <summary>
+    /// The page view shown in the shell. It is null while Veyra is hidden or minimised so the
+    /// WPF visual tree (and its render surfaces) can be collected instead of sitting in memory
+    /// behind the notification-area icon.
+    /// </summary>
+    public PageViewModel? PageHostContent => _pageHostSuspended ? null : _currentPage;
+
+    public void SuspendPageHost()
+    {
+        if (_pageHostSuspended) return;
+        _pageHostSuspended = true;
+        OnPropertyChanged(nameof(PageHostContent));
+    }
+
+    public void ResumePageHost()
+    {
+        if (!_pageHostSuspended) return;
+        _pageHostSuspended = false;
+        OnPropertyChanged(nameof(PageHostContent));
+    }
+
     public void SelectMore()
     {
         SelectedNavigationEntry = MoreEntry;
@@ -111,8 +130,13 @@ public sealed class ShellViewModel : ObservableObject
     public bool ShowSoftBackdrop => string.Equals(AppServices.Settings.Backdrop, "Soft", StringComparison.OrdinalIgnoreCase);
     public bool ShowPetalBackdrop => string.Equals(AppServices.Settings.Backdrop, "Petals", StringComparison.OrdinalIgnoreCase);
 
+    private bool _pageHostSuspended;
     private string? _backgroundPath;
     private ImageSource? _backgroundImage;
+
+    // A backdrop is drawn at a fraction of the window size, so a 4K photo never needs to be
+    // decoded at its full resolution.
+    private const int BackgroundDecodeWidth = 2560;
 
     public ImageSource? BackgroundImage
     {
@@ -130,6 +154,7 @@ public sealed class ShellViewModel : ObservableObject
                 var image = new BitmapImage();
                 image.BeginInit();
                 image.CacheOption = BitmapCacheOption.OnLoad;
+                image.DecodePixelWidth = BackgroundDecodeWidth;
                 image.UriSource = new Uri(path, UriKind.Absolute);
                 image.EndInit();
                 image.Freeze();

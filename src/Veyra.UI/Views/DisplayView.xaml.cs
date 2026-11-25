@@ -35,6 +35,16 @@ public partial class DisplayView : UserControl
         if (DataContext is DisplayViewModel vm) await vm.SavePresetAsync();
     }
 
+    private async void DeletePreset_Click(object sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is FrameworkElement { DataContext: PresetCardViewModel card } &&
+            DataContext is DisplayViewModel vm)
+        {
+            await vm.DeletePresetAsync(card);
+        }
+    }
+
     private async void Preset_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if (sender is FrameworkElement { DataContext: PresetCardViewModel card } &&

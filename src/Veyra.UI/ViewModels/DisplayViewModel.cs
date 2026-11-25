@@ -33,11 +33,12 @@ public sealed class DisplayViewModel : PageViewModel
     private int _presetIndex = -1;
 
     public override string Title => "Display";
-    public override string Subtitle => "Scenes are starting points. The sliders work whatever you play.";
+    public override string Subtitle => "Tune the colour, then save it as a look you can reuse.";
     public override string Glyph => "\uE7F4";
 
     public ObservableCollection<DisplayInfo> Displays { get; } = new();
     public ObservableCollection<PresetCardViewModel> Presets { get; } = new();
+    public bool PresetsEmpty => Presets.Count == 0;
 
     public DisplayInfo? SelectedDisplay
     {
@@ -257,6 +258,15 @@ public sealed class DisplayViewModel : PageViewModel
         }
     }
 
+    public async Task DeletePresetAsync(PresetCardViewModel card)
+    {
+        if (card is null) return;
+
+        await AppServices.Presets.DeleteAsync(card.Id, default);
+        await ReloadPresetsAsync();
+        Status = $"Look '{card.Name}' deleted.";
+    }
+
     public async Task CyclePresetAsync()
     {
         if (Presets.Count == 0) return;
@@ -287,7 +297,7 @@ public sealed class DisplayViewModel : PageViewModel
         await AppServices.Presets.SaveAsync(preset, default);
         await ReloadPresetsAsync();
         PresetName = string.Empty;
-        Status = $"Look '{preset.Name}' saved to the library.";
+        Status = $"Look '{preset.Name}' saved.";
     }
 
     public async Task ResetAsync()
@@ -351,16 +361,12 @@ public sealed class DisplayViewModel : PageViewModel
         var presets = await AppServices.Presets.GetAllAsync(default);
         Presets.Clear();
 
-        var order = new[]
-        {
-            "builtin.default", "builtin.balanced", "builtin.vibrant",
-            "builtin.competitive", "builtin.warm", "builtin.cool", "builtin.night"
-        };
-        foreach (var preset in presets.OrderBy(p => Array.IndexOf(order, p.Id) is var i && i < 0 ? 99 : i)
-                     .ThenBy(p => p.Name, StringComparer.OrdinalIgnoreCase))
+        foreach (var preset in presets.OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase))
         {
             Presets.Add(new PresetCardViewModel(preset));
         }
+
+        OnPropertyChanged(nameof(PresetsEmpty));
     }
 
     private static string BuildSaturationReason(ColourControlCapability saturation)

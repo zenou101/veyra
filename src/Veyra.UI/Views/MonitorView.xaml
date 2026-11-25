@@ -13,7 +13,7 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                         <Border Background="{StaticResource AccentSoftBrush}" BorderBrush="#1B5C73" BorderThickness="1"
                                 CornerRadius="6" Padding="9,5" Margin="0,0,8,0">
-                            <TextBlock Text="DDC/CI" FontSize="10" FontWeight="SemiBold"
+                            <TextBlock Text="DDC/CI" FontSize="10.5" FontWeight="SemiBold"
                                        Foreground="{StaticResource AccentBrightBrush}" />
                         </Border>
                         <Button Content="Restore my monitor" Style="{StaticResource PrimaryButton}" Click="Restore_Click" />

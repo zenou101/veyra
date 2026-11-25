@@ -27,20 +27,20 @@ into games or touch anti-cheat systems.
 Both builds are self-contained Windows x64. The installer is per-user, adds Start-menu and desktop
 shortcuts, and needs no administrator rights. Release binaries are unsigned and are published on GitHub Releases, not in the source tree.
 
-| Display | Library |
-| :---: | :---: |
-| ![Veyra Display](docs/screenshots/display.png) | ![Veyra Library](docs/screenshots/library.png) |
+| Display |
+| :---: |
+| ![Veyra Display](docs/screenshots/display.png) |
 
 ## Overview
 
 Veyra is a focused WPF app for Windows 10 x64. It detects the complete display setup,
 applies changes only when the driver accepts them, and keeps an exact snapshot so every
-change can be undone. A compact navigation sidebar keeps the eight pages within reach:
+change can be undone. A compact navigation sidebar keeps the six main pages within reach, with
+startup, hotkeys and licence details on **More**:
 
 - **Display** — driver saturation and Windows gamma side by side, brightness, contrast,
-  temperature, blacks, highlights and red tint in one fine-tuning grid, plus scene presets.
-- **Library** — every built-in scene and saved look in one place; apply, rename or delete
-  saved looks without leaving the page.
+  temperature, blacks, highlights and red tint in one fine-tuning grid, with saved looks you
+  can apply or delete.
 - **Resolution** — monitor modes and refresh rates, applied with a 15-second confirmation and
   an out-of-process rollback guard.
 - **Monitor** — the monitor's own DDC/CI settings: brightness, contrast and low blue light
@@ -78,8 +78,8 @@ rollback if the app stops responding.
 | Check | Result |
 | --- | --- |
 | Debug and Release builds (win-x64) | pass |
-| Unit tests (Core, Storage, Display, Games) | **57 passed, 0 failed** |
-| App launch, navigation and all eight pages | verified; screenshots above |
+| Unit tests (Core, Storage, Display, Games) | **56 passed, 0 failed** |
+| App launch, navigation and all six pages | verified; screenshots above |
 | Windows gamma ramp write/read | accepted; ramp readback changed and restored |
 | AMD ADL2 saturation write/read | **verified 0–300 %**: 100 → 150 → 100 through the slider, bypass and restore |
 | AMD driver saturation crash recovery | **verified**: 170 % survived a killed process and was restored to 100 % on the next launch |

@@ -1,11 +1,9 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Veyra.Colour;
 using Veyra.Core.Models;
-using Veyra.Core.Services;
 using Veyra.Display.Monitors;
 using Veyra.Overlay;
 using Veyra.Storage.Database;
@@ -43,19 +41,6 @@ public static class AppServices
         Overlay = new OverlayService();
 
         Settings = SettingsStore.Load();
-
-        var existing = await Presets.GetAllAsync(cancellationToken);
-        var builtIns = BuiltInPresets.Create();
-        foreach (var preset in builtIns)
-        {
-            // Built-ins are not editable, so refresh them on every start. This also migrates
-            // older rows (for example a pre-driver saturation value) to the current definition.
-            var stored = existing.FirstOrDefault(p => p.Id == preset.Id);
-            if (stored is null || stored.IsBuiltIn)
-            {
-                await Presets.SaveAsync(preset, cancellationToken);
-            }
-        }
 
         var recovery = await Colour.RecoverPendingAsync(cancellationToken);
         StartupStatus = recovery.Message;

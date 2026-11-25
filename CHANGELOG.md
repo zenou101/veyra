@@ -2,6 +2,36 @@
 
 All notable changes to Veyra. The project follows semantic versioning from 1.0.0.
 
+## [1.0.2] — 2026-11-25
+
+### Changed
+
+- Removed the Library page. Saved looks live on Display, and every saved-look card now has a
+  delete action.
+- Raised the smallest text sizes, widened the saved-look cards, added an empty state and
+  tightened spacing in the sidebar and page headers.
+- The README and website no longer show the Library page.
+
+### Fixed
+
+- The MSI carries version 1.0.2, so it upgrades an existing 1.0.1 installation.
+
+## [1.0.1] — 2026-11-25
+
+Maintenance release. Lower idle memory use, and an installer that upgrades an existing 1.0.0
+installation instead of being rejected as the same version.
+
+### Changed
+
+- The page visuals are released when the window is hidden or minimised, the working set is trimmed
+  while Veyra sits in the tray, and the background picture is decoded at a capped size. Visible
+  memory fell to about 190 MB and the tray footprint to about 31 MB.
+- The seven pre-made presets are gone; Display and Library list only looks you save yourself.
+
+### Fixed
+
+- The MSI now carries version 1.0.1, so it performs a major upgrade over 1.0.0.
+
 ## [1.0.0] — 2026-11-24
 
 First public release. Unsigned, Windows 10 22H2 x64, verified on an AMD RX 7800 XT.
@@ -11,10 +41,10 @@ First public release. Unsigned, Windows 10 22H2 x64, verified on an AMD RX 7800 
 - Compact 96 px navigation sidebar and nine pages: Display, Library, Resolution, Monitor,
   Customize, Crosshair, Profiles, Dark Boost & Zoom, and More.
 - Display combines per-display driver saturation and Windows gamma side by side, with
-  brightness, contrast, temperature, blacks, highlights and red tint fine-tuning and a scene
-  preset grid. Saturation and gamma update live.
-- Library for built-in scenes and user-saved looks, with apply and delete actions; Profiles for
-  named game looks applied on request.
+  brightness, contrast, temperature, blacks, highlights and red tint fine-tuning and a saved
+  looks grid. Saturation and gamma update live.
+- Library for saved looks, with apply and delete actions; Profiles for named game looks applied
+  on request.
 - DDC/CI monitor page for brightness, contrast and low blue light where the display exposes
   them, plus one-click restore of the monitor's own settings.
 - Customize page: Default or Slate panel modes, panel opacity, a background picture, Petals or
@@ -38,6 +68,8 @@ First public release. Unsigned, Windows 10 22H2 x64, verified on an AMD RX 7800 
   waiting for **Apply to display**.
 - Removed the unimplemented diagnostics-logging and compact-sidebar settings and the nonfunctional
   settings toggles. Added screen-reader names to sidebar, display and preset items.
+- Removed the seven pre-made presets. Display and Library now list only looks you save yourself,
+  and rows left behind by older installs are deleted on launch.
 - Fixed the release workflow's changelog input and the remaining xUnit analyzer warning.
 
 ### Known gaps

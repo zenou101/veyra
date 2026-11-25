@@ -4,5 +4,5 @@ namespace Veyra.Core;
 public static class AppInfo
 {
     public const string ProductName = "Veyra";
-    public const string Version = "1.0.0";
+    public const string Version = "1.0.2";
 }

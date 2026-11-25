@@ -15,7 +15,7 @@
                             <Border Background="#10201E" BorderBrush="#26544C" BorderThickness="1" CornerRadius="6" Padding="9,5">
                                 <StackPanel Orientation="Horizontal">
                                     <Ellipse Width="6" Height="6" Fill="{StaticResource SuccessBrush}" VerticalAlignment="Center" />
-                                    <TextBlock Text="Guard ready" FontSize="10.5" FontWeight="SemiBold"
+                                    <TextBlock Text="Guard ready" FontSize="11" FontWeight="SemiBold"
                                                Foreground="{StaticResource SuccessBrush}" Margin="6,0,0,0" />
                                 </StackPanel>
                             </Border>
@@ -183,7 +183,7 @@
                                     <DataTemplate>
                                         <StackPanel>
                                             <TextBlock Text="{Binding FriendlyName}" FontSize="11.5" />
-                                            <TextBlock Text="{Binding ResolutionLabel}" FontSize="9.5" Opacity="0.75" />
+                                            <TextBlock Text="{Binding ResolutionLabel}" FontSize="10.5" Opacity="0.75" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>

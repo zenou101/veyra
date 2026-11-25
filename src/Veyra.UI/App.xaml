@@ -19,9 +19,6 @@
             <DataTemplate DataType="{x:Type vm:DisplayViewModel}">
                 <views:DisplayView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:LibraryViewModel}">
-                <views:LibraryView />
-            </DataTemplate>
             <DataTemplate DataType="{x:Type vm:ResolutionViewModel}">
                 <views:ResolutionView />
             </DataTemplate>

@@ -1,11 +1,11 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package Name="Veyra"
            Manufacturer="Veyra"
-           Version="1.0.0.0"
+           Version="1.0.2.0"
            UpgradeCode="6D3C1E4A-9B27-4F0D-8F4E-2B7C9A1D5E30"
            Scope="perUser"
            Compressed="yes">
-    <SummaryInformation Description="Veyra 1.0.0 display and colour utility" />
+    <SummaryInformation Description="Veyra 1.0.2 display and colour utility" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of Veyra is already installed." />
     <MediaTemplate EmbedCab="yes" />
     <Icon Id="VeyraIcon" SourceFile="src\Veyra.UI\Assets\Veyra.ico" />
@@ -27,14 +27,14 @@
 
   <Fragment>
     <Component Id="ShortcutComponent" Directory="ShortcutFolder" Guid="A1B2C3D4-1111-4E5F-9A0B-1234567890AB">
-      <Shortcut Id="VeyraStartMenu" Name="Veyra" Description="Veyra 1.0.0"
+      <Shortcut Id="VeyraStartMenu" Name="Veyra" Description="Veyra 1.0.2"
                 Target="[INSTALLFOLDER]Veyra.exe" WorkingDirectory="INSTALLFOLDER" Icon="VeyraIcon" />
       <RemoveFolder Id="RemoveShortcutFolder" On="uninstall" />
       <RegistryValue Root="HKCU" Key="Software\Veyra" Name="Installed" Type="integer" Value="1" KeyPath="yes" />
     </Component>
 
     <Component Id="DesktopShortcutComponent" Directory="DesktopFolder" Guid="C4E7A921-6D3B-4F82-9C51-8A2E7B1D4F60">
-      <Shortcut Id="VeyraDesktop" Name="Veyra" Description="Veyra 1.0.0"
+      <Shortcut Id="VeyraDesktop" Name="Veyra" Description="Veyra 1.0.2"
                 Target="[INSTALLFOLDER]Veyra.exe" WorkingDirectory="INSTALLFOLDER" Icon="VeyraIcon" />
       <RegistryValue Root="HKCU" Key="Software\Veyra" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
     </Component>

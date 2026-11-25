@@ -1,10 +1,12 @@
 using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using Veyra.Core.Models;
 using Veyra.Core.Services;
 using Veyra.UI.Infrastructure;
@@ -35,6 +37,7 @@ public partial class MainWindow : Window
         if (AppServices.Settings.WindowMaximized) WindowState = WindowState.Maximized;
 
         Loaded += OnLoaded;
+        StateChanged += OnStateChanged;
         Closing += OnClosing;
         Closed += OnClosed;
     }
@@ -48,9 +51,10 @@ public partial class MainWindow : Window
 
         if (AppServices.Settings.StartMinimized)
         {
-            Hide();
+            HideToTray();
             _tray?.ShowBalloonTip(2000, "Veyra", "Running in the notification area.", ToolTipIcon.Info);
         }
+
     }
 
     private void OnShellPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -109,9 +113,7 @@ public partial class MainWindow : Window
                 _shell.Crosshair.Toggle();
                 break;
             case HotkeyAction.OpenVeyra:
-                Show();
-                WindowState = WindowState.Normal;
-                Activate();
+                ShowFromTray();
                 break;
             case HotkeyAction.ToggleColourEnhancements:
                 _ = ToggleColourAsync();
@@ -134,7 +136,7 @@ public partial class MainWindow : Window
         var neutral = current.Values.Gamma is null or 1 && current.Values.Brightness is null or 0;
         _ = neutral
             ? await AppServices.Colour.ApplyAsync(display,
-                BuiltInPresets.Create().First(p => p.Id == "builtin.balanced").Colour, default)
+                new ColourSettings { Gamma = 1.05, Contrast = 3, Temperature = 6500 }, default)
             : await AppServices.Colour.RestoreAsync(display, default);
     }
 
@@ -149,12 +151,12 @@ public partial class MainWindow : Window
         };
 
         var menu = new ContextMenuStrip();
-        menu.Items.Add("Open Veyra", null, (_, _) => { Show(); WindowState = WindowState.Normal; Activate(); });
+        menu.Items.Add("Open Veyra", null, (_, _) => ShowFromTray());
         menu.Items.Add("Toggle crosshair", null, (_, _) => _shell.Crosshair.Toggle());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Exit", null, (_, _) => ExitApplication());
         _tray.ContextMenuStrip = menu;
-        _tray.DoubleClick += (_, _) => { Show(); Activate(); };
+        _tray.DoubleClick += (_, _) => ShowFromTray();
     }
 
     private static System.Drawing.Icon LoadTrayIcon()
@@ -203,9 +205,54 @@ public partial class MainWindow : Window
         if (!_exiting && AppServices.Settings.CloseToTray)
         {
             e.Cancel = true;
-            Hide();
+            HideToTray();
             _tray?.ShowBalloonTip(1500, "Veyra is still running", "Use the tray icon to reopen or exit.", ToolTipIcon.Info);
         }
+    }
+
+    private void OnStateChanged(object? sender, EventArgs e)
+    {
+        if (WindowState == WindowState.Minimized)
+        {
+            _shell.SuspendPageHost();
+            ScheduleMemoryTrim();
+        }
+        else
+        {
+            _shell.ResumePageHost();
+        }
+    }
+
+    private void HideToTray()
+    {
+        Hide();
+
+        // Nothing on the page can be seen while Veyra is in the notification area, so drop
+        // the visual tree and hand its pages back to Windows until the window is reopened.
+        _shell.SuspendPageHost();
+        ScheduleMemoryTrim();
+    }
+
+    private void ShowFromTray()
+    {
+        _shell.ResumePageHost();
+        Show();
+        WindowState = WindowState.Normal;
+        Activate();
+    }
+
+    private void ScheduleMemoryTrim()
+    {
+        // Runs after the hide/minimise has settled, so the released visuals are already garbage.
+        Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(TrimMemory));
+    }
+
+    private static void TrimMemory()
+    {
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, blocking: true, compacting: true);
+        GC.WaitForPendingFinalizers();
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, blocking: true, compacting: true);
+        EmptyWorkingSet(GetCurrentProcess());
     }
 
     private void OnClosed(object sender, EventArgs e)
@@ -222,4 +269,10 @@ public partial class MainWindow : Window
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
 
     private void Close_Click(object sender, RoutedEventArgs e) => Close();
+
+    [DllImport("psapi.dll")]
+    private static extern bool EmptyWorkingSet(IntPtr process);
+
+    [DllImport("kernel32.dll")]
+    private static extern IntPtr GetCurrentProcess();
 }

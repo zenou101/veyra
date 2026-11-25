@@ -16,26 +16,19 @@ public sealed class PresetRepository : IPresetRepository
     {
         _database = database;
         _database.Migrate();
-        SeedBuiltIns();
+        RemoveBuiltIns();
     }
 
-    private void SeedBuiltIns()
+    /// <summary>
+    /// Veyra no longer ships pre-made presets. Older installs still have their rows, so they
+    /// are deleted here; user-saved looks (id prefix "user.") are left untouched.
+    /// </summary>
+    private void RemoveBuiltIns()
     {
         using var connection = _database.Open();
-        foreach (var preset in BuiltInPresets.Create())
-        {
-            using var command = connection.CreateCommand();
-            command.CommandText = """
-                INSERT OR IGNORE INTO presets (id, name, kind, json, updated_at)
-                VALUES ($id, $name, $kind, $json, $updated);
-                """;
-            command.Parameters.AddWithValue("$id", preset.Id);
-            command.Parameters.AddWithValue("$name", preset.Name);
-            command.Parameters.AddWithValue("$kind", (int)preset.Kind);
-            command.Parameters.AddWithValue("$json", JsonSerializer.Serialize(preset, JsonDefaults.Options));
-            command.Parameters.AddWithValue("$updated", preset.UpdatedAt.ToString("O"));
-            command.ExecuteNonQuery();
-        }
+        using var command = connection.CreateCommand();
+        command.CommandText = "DELETE FROM presets WHERE id LIKE 'builtin.%';";
+        command.ExecuteNonQuery();
     }
 
     public Task<IReadOnlyList<Preset>> GetAllAsync(CancellationToken cancellationToken = default) =>
@@ -103,7 +96,7 @@ public sealed class PresetRepository : IPresetRepository
         {
             using var connection = _database.Open();
             using var command = connection.CreateCommand();
-            command.CommandText = "DELETE FROM presets WHERE id = $id AND id NOT LIKE 'builtin.%';";
+            command.CommandText = "DELETE FROM presets WHERE id = $id;";
             command.Parameters.AddWithValue("$id", id);
             command.ExecuteNonQuery();
         }

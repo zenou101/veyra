@@ -40,7 +40,7 @@
                     </StackPanel>
                     <Border HorizontalAlignment="Right" VerticalAlignment="Center" Background="{StaticResource AccentSoftBrush}"
                             BorderBrush="#1B5C73" BorderThickness="1" CornerRadius="6" Padding="10,6">
-                        <TextBlock Text="Saved automatically" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" />
+                        <TextBlock Text="Saved automatically" FontSize="11" Foreground="{StaticResource TextMutedBrush}" />
                     </Border>
                 </Grid>
             </Border>

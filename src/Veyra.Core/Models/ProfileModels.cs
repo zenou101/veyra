@@ -16,7 +16,6 @@ public sealed record Preset
     public ColourSettings Colour { get; init; } = new();
     public DisplayMode? DisplayMode { get; init; }
     public string? MonitorId { get; init; }
-    public bool IsBuiltIn { get; init; }
     public bool IsDefault { get; init; }
     public DateTimeOffset UpdatedAt { get; init; } = DateTimeOffset.UtcNow;
 

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Veyra.Core.Models;
 using Veyra.Core.Services;
 using Xunit;
@@ -86,13 +85,5 @@ public sealed class ProfileAndHotkeyTests
         var neutral = ColourRampCalculator.BuildRamp(ColourSettings.Neutral);
         var dim = ColourRampCalculator.BuildRamp(new ColourSettings { Brightness = -40 });
         Assert.True(dim[128] < neutral[128]);
-    }
-
-    [Fact]
-    public void Built_in_presets_have_unique_ids_and_one_default()
-    {
-        var presets = BuiltInPresets.Create();
-        Assert.Equal(presets.Count, new HashSet<string>(presets.Select(p => p.Id)).Count);
-        Assert.Single(presets, p => p.IsDefault);
     }
 }

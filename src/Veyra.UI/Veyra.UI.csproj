@@ -9,6 +9,9 @@
     <ApplicationIcon>Assets\Veyra.ico</ApplicationIcon>
     <StartupObject>Veyra.UI.App</StartupObject>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    <!-- The heap is a few megabytes; a background GC thread costs more than it saves. -->
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <RetainVMGarbageCollection>false</RetainVMGarbageCollection>
   </PropertyGroup>
   <ItemGroup>
     <Using Remove="System.Windows.Forms" />
