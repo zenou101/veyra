@@ -65,8 +65,8 @@ public sealed class ShellViewModel : ObservableObject
         get => _selectedNavigationEntry;
         set
         {
-            if (!Set(ref _selectedNavigationEntry, value) || value is null) return;
-            CurrentPage = value.Page;
+            if (!Set(ref _selectedNavigationEntry, value)) return;
+            if (value is not null) CurrentPage = value.Page;
         }
     }
 
@@ -80,7 +80,7 @@ public sealed class ShellViewModel : ObservableObject
 
             if (!ReferenceEquals(_selectedNavigationEntry?.Page, value))
             {
-                foreach (var entry in NavigationEntries)
+                foreach (var entry in MainNavigation)
                 {
                     if (!ReferenceEquals(entry.Page, value)) continue;
                     _selectedNavigationEntry = entry;
@@ -120,7 +120,13 @@ public sealed class ShellViewModel : ObservableObject
 
     public void SelectMore()
     {
-        SelectedNavigationEntry = MoreEntry;
+        if (ReferenceEquals(CurrentPage, More)) return;
+
+        // More is a separate button, not an entry in the sidebar ListBox. Clearing the
+        // selection keeps the previous page from staying highlighted next to it.
+        _selectedNavigationEntry = null;
+        OnPropertyChanged(nameof(SelectedNavigationEntry));
+        CurrentPage = More;
     }
 
     public string Status { get => _status; set => Set(ref _status, value); }

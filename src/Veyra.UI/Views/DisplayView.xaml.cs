@@ -45,7 +45,7 @@ public partial class DisplayView : UserControl
         }
     }
 
-    private async void Preset_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private async void Preset_Click(object sender, RoutedEventArgs e)
     {
         if (sender is FrameworkElement { DataContext: PresetCardViewModel card } &&
             DataContext is DisplayViewModel vm)

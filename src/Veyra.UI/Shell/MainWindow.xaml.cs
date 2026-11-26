@@ -35,6 +35,7 @@ public partial class MainWindow : Window
         if (!double.IsNaN(AppServices.Settings.WindowLeft)) Left = AppServices.Settings.WindowLeft;
         if (!double.IsNaN(AppServices.Settings.WindowTop)) Top = AppServices.Settings.WindowTop;
         if (AppServices.Settings.WindowMaximized) WindowState = WindowState.Maximized;
+        UpdateWindowChrome();
 
         Loaded += OnLoaded;
         StateChanged += OnStateChanged;
@@ -210,8 +211,27 @@ public partial class MainWindow : Window
         }
     }
 
+    private void UpdateWindowChrome()
+    {
+        var maximized = WindowState == WindowState.Maximized;
+        if (MaximiseGlyph is not null && RestoreGlyph is not null)
+        {
+            MaximiseGlyph.Visibility = maximized ? Visibility.Collapsed : Visibility.Visible;
+            RestoreGlyph.Visibility = maximized ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        if (MaximiseButton is not null)
+        {
+            MaximiseButton.ToolTip = maximized ? "Restore" : "Maximise";
+            System.Windows.Automation.AutomationProperties.SetName(
+                MaximiseButton, maximized ? "Restore" : "Maximise");
+        }
+    }
+
     private void OnStateChanged(object? sender, EventArgs e)
     {
+        UpdateWindowChrome();
+
         if (WindowState == WindowState.Minimized)
         {
             _shell.SuspendPageHost();

@@ -12,7 +12,7 @@ public partial class CrosshairView : UserControl
         InitializeComponent();
     }
 
-    private void Colour_Click(object sender, MouseButtonEventArgs e)
+    private void Colour_Click(object sender, RoutedEventArgs e)
     {
         if (sender is FrameworkElement { DataContext: string colour } && DataContext is CrosshairViewModel vm)
         {

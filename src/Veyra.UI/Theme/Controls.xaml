@@ -2,122 +2,182 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="Card" TargetType="Border">
-        <!-- Dynamic so the Customize opacity/mode brushes actually reach every card. -->
         <Setter Property="Background" Value="{DynamicResource CardGradientBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="CornerRadius" Value="14" />
         <Setter Property="Padding" Value="22" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="{StaticResource BorderStrongBrush}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <ControlTemplate x:Key="BaseButtonTemplate" TargetType="Button">
-        <Grid x:Name="Root">
-            <!-- Glow lives on a background layer so button text is never rasterised through an effect. -->
-            <Border x:Name="Glow" Background="{TemplateBinding Background}" CornerRadius="10"
-                    Effect="{TemplateBinding Effect}" IsHitTestVisible="False" />
+        <Grid>
+            <Border x:Name="FocusRing" CornerRadius="9" BorderBrush="{StaticResource AccentBrush}"
+                    BorderThickness="1" Margin="-3" Opacity="0" IsHitTestVisible="False" />
             <Border x:Name="ButtonBody" Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
-                    CornerRadius="10" Padding="{TemplateBinding Padding}"
-                    SnapsToDevicePixels="True">
-                <Grid>
-                    <Border x:Name="Sheen" Background="#FFFFFF" CornerRadius="9" Opacity="0" />
-                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
-                                      RecognizesAccessKey="True" />
-                </Grid>
+                    CornerRadius="8" SnapsToDevicePixels="True">
+                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  RecognizesAccessKey="True" />
             </Border>
         </Grid>
         <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="Sheen" Property="Opacity" Value="0.08" />
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter TargetName="FocusRing" Property="Opacity" Value="1" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter TargetName="Root" Property="Opacity" Value="0.82" />
+                <Setter TargetName="ButtonBody" Property="Opacity" Value="0.82" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter TargetName="Root" Property="Opacity" Value="0.32" />
+                <Setter TargetName="ButtonBody" Property="Opacity" Value="0.46" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <Style TargetType="Button">
+    <Style x:Key="ButtonBase" TargetType="Button">
+        <Setter Property="Height" Value="36" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Padding" Value="14,0" />
         <Setter Property="Background" Value="{StaticResource SurfaceRaisedBrush}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource BorderStrongBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="15,9" />
         <Setter Property="FontFamily" Value="{StaticResource TextFont}" />
         <Setter Property="FontSize" Value="12.5" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template" Value="{StaticResource BaseButtonTemplate}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     </Style>
 
-    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Background" Value="{StaticResource AccentGradientBrush}" />
-        <Setter Property="Foreground" Value="#04151D" />
+    <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#162833" />
+                <Setter Property="BorderBrush" Value="#3A5664" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#0E1B23" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource SecondaryButton}" />
+
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+        <Setter Property="Foreground" Value="#04161D" />
         <Setter Property="BorderBrush" Value="#00000000" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Padding" Value="17,10" />
-        <Setter Property="Effect" Value="{StaticResource AccentGlowEffect}" />
+        <Setter Property="Padding" Value="16,0" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource AccentBrightBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#49B9D8" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
-    <Style x:Key="GhostButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Background" Value="#08151D" />
-        <Setter Property="Foreground" Value="{StaticResource AccentBrightBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderStrongBrush}" />
-        <Setter Property="Padding" Value="15,9" />
+    <Style x:Key="GhostButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="12,0" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#12212A" />
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#0D181F" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
-    <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Background" Value="#26131A" />
-        <Setter Property="Foreground" Value="#FFB4C3" />
-        <Setter Property="BorderBrush" Value="#5C2B38" />
-        <Setter Property="Padding" Value="15,9" />
+    <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Background" Value="{StaticResource DangerSoftBrush}" />
+        <Setter Property="Foreground" Value="#FFB3BB" />
+        <Setter Property="BorderBrush" Value="{StaticResource DangerBorderBrush}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#351A20" />
+                <Setter Property="BorderBrush" Value="#8A4350" />
+                <Setter Property="Foreground" Value="#FFD1D5" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#261217" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
-    <Style x:Key="TitleBarButton" TargetType="Button">
-        <Setter Property="Width" Value="40" />
-        <Setter Property="Height" Value="28" />
-        <Setter Property="Margin" Value="2,0" />
+    <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="MinWidth" Value="32" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="Root" CornerRadius="8" Background="{TemplateBinding Background}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="{StaticResource SurfaceHoverBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-                        </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="True" />
-                                <Condition Property="Tag" Value="Close" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="Root" Property="Background" Value="#3B1722" />
-                            <Setter Property="Foreground" Value="#FF9FB0" />
-                        </MultiTrigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Root" Property="Opacity" Value="0.75" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#172A34" />
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#0E1A21" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="DangerIconButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource DangerSoftBrush}" />
+                <Setter Property="Foreground" Value="#FFB3BB" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#261217" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TitleBarButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+        <Setter Property="Width" Value="46" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="MinWidth" Value="46" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#15242D" />
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#0D181E" />
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True" />
+                    <Condition Property="Tag" Value="Close" />
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" Value="#7A2330" />
+                <Setter Property="Foreground" Value="#FFF1F3" />
+            </MultiTrigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

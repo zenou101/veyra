@@ -1,21 +1,18 @@
 <UserControl x:Class="Veyra.UI.Views.ResolutionView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Veyra.UI.Controls">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Style="{StaticResource PageContent}">
 
-            <Border Style="{StaticResource Panel}" Padding="24,18">
-                <Grid>
+            <controls:PageHeader Eyebrow="DISPLAY MODES" Title="{Binding Title}" Subtitle="{Binding Subtitle}">
+                <controls:PageHeader.Actions>
                     <StackPanel>
-                        <TextBlock Text="{Binding Title}" Style="{StaticResource PageTitle}" />
-                        <TextBlock Text="{Binding Subtitle}" Style="{StaticResource PageSubtitle}" />
-                    </StackPanel>
-                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Border Background="#10201E" BorderBrush="#26544C" BorderThickness="1" CornerRadius="6" Padding="9,5">
+                            <Border Style="{StaticResource Badge}">
                                 <StackPanel Orientation="Horizontal">
                                     <Ellipse Width="6" Height="6" Fill="{StaticResource SuccessBrush}" VerticalAlignment="Center" />
-                                    <TextBlock Text="Guard ready" FontSize="11" FontWeight="SemiBold"
+                                    <TextBlock Text="Guard ready" Style="{StaticResource BadgeText}"
                                                Foreground="{StaticResource SuccessBrush}" Margin="6,0,0,0" />
                                 </StackPanel>
                             </Border>
@@ -23,19 +20,19 @@
                                        Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="10,0,0,0" />
                         </StackPanel>
                         <TextBlock Text="{Binding CurrentDetail}" Style="{StaticResource Tiny}" HorizontalAlignment="Right"
-                                   Margin="0,4,0,0" />
+                                   Margin="0,5,0,0" />
                     </StackPanel>
-                </Grid>
-            </Border>
+                </controls:PageHeader.Actions>
+            </controls:PageHeader>
 
-            <Grid Margin="0,10,0,0">
+            <Grid Margin="0,12,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="320" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel>
-                    <Border Style="{StaticResource Panel}" Padding="24,20">
+                    <Border Style="{StaticResource Panel}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -64,7 +61,7 @@
                         </Grid>
                     </Border>
 
-                    <Border Style="{StaticResource Panel}" Padding="24,20" Margin="0,10,0,0">
+                    <Border Style="{StaticResource Panel}" Margin="0,12,0,0">
                         <StackPanel>
                             <Grid>
                                 <TextBlock Text="Resolution" Style="{StaticResource SectionTitle}" />
@@ -126,8 +123,8 @@
                     </Border>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                    <Border Style="{StaticResource Panel}" Padding="20,18">
+                <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                    <Border Style="{StaticResource Panel}">
                         <StackPanel>
                             <TextBlock Text="Quick picks" Style="{StaticResource SectionTitle}" />
                             <TextBlock Text="Sets the list above. You still confirm the change." Style="{StaticResource Tiny}"
@@ -168,7 +165,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Style="{StaticResource Panel}" Padding="20,18" Margin="0,10,0,0">
+                    <Border Style="{StaticResource Panel}" Margin="0,12,0,0">
                         <StackPanel>
                             <TextBlock Text="Display" Style="{StaticResource SectionTitle}" />
                             <ListBox ItemsSource="{Binding Displays}" SelectedItem="{Binding SelectedDisplay}"
